@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.CommodityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sweet.api.entity.Commodity">
+        <id column="id" property="id" />
+        <result column="commodity_no" property="commodityNo" />
+        <result column="commodity_name" property="commodityName" />
+        <result column="sell_point" property="sellPoint" />
+        <result column="default_pic" property="defaultPic" />
+        <result column="commodity_desc" property="commodityDesc" />
+        <result column="brand_name" property="brandName" />
+        <result column="item_no" property="itemNo" />
+        <result column="sale_price" property="salePrice" />
+        <result column="market_price" property="marketPrice" />
+        <result column="cost_price" property="costPrice" />
+        <result column="stock" property="stock" />
+        <result column="prop_no" property="propNo" />
+        <result column="commodity_status" property="commodityStatus" />
+        <result column="show_date" property="showDate" />
+        <result column="down_date" property="downDate" />
+        <result column="sales_quantity" property="salesQuantity" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+    </resultMap>
+
+    <resultMap id="commodityInfoResultMap" type="com.sweet.api.entity.vo.CommodityVo">
+        <id column="id" property="id" />
+        <result column="commodity_no" property="commodityNo" />
+        <result column="commodity_name" property="commodityName" />
+        <result column="sell_point" property="sellPoint" />
+        <result column="commodity_desc" property="commodityDesc" />
+        <result column="brand_name" property="brandName" />
+        <result column="item_no" property="itemNo" />
+        <result column="sale_price" property="salePrice" />
+        <result column="market_price" property="marketPrice" />
+        <result column="cost_price" property="costPrice" />
+        <result column="default_pic" property="defaultPic" />
+        <result column="stock" property="stock" />
+        <result column="prop_no" property="propNo" />
+        <result column="commodity_status" property="commodityStatus" />
+        <result column="show_date" property="showDate" />
+        <result column="down_date" property="downDate" />
+        <result column="sales_quantity" property="salesQuantity" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="operator" property="operator" />
+        <association property="prop" column="prop_no" javaType="com.sweet.api.entity.CommodityProp">
+            <result column="rid" property="id"/>
+            <result column="prop_no" property="propNo"/>
+            <result column="prop_name" property="propName"/>
+            <result column="type" property="type"/>
+        </association>
+        <collection property="pics" ofType="com.sweet.api.entity.CommodityPics" column="commodityNo">
+            <result column="pid" property="id" />
+            <result column="commodity_no" property="commodityNo" />
+            <result column="type" property="type" />
+            <result column="image" property="image" />
+            <result column="sort_no" property="sortNo" />
+            <result column="status" property="status" />
+            <result column="pcreateTime" property="createTime" />
+            <result column="pupdateTime" property="updateTime" />
+            <result column="operator" property="operator" />
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, commodity_no, commodity_name, sell_point, default_pic, commodity_desc, brand_name, item_no, sale_price, market_price, cost_price, stock, prop_no, commodity_status, show_date, down_date, sales_quantity, create_time, update_time, operator
+    </sql>
+
+    <select id="getCommodityByNo" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM tbl_cms_commodity
+        WHERE commodity_no = #{commodityNo}
+    </select>
+
+    <select id="getAllCommodityByItemNo" resultMap="commodityInfoResultMap">
+        SELECT
+		cm.*,
+		pic.id AS pid, pic.type, pic.image, pic.sort_no, pic.status, pic.create_time AS pcreateTime,
+		pic.update_time AS pupdateTime,
+		pr.id AS rid, pr.prop_no, pr.prop_name, pr.type AS type
+		FROM tbl_cms_commodity cm
+	    LEFT JOIN tbl_cms_commodity_prop pr ON cm.prop_no = pr.prop_no
+	    LEFT JOIN tbl_cms_commodity_pics pic ON cm.commodity_no = pic.commodity_no
+		WHERE pic.status = 1
+		AND cm.item_no = #{itemNo}
+		ORDER BY cm.commodity_no DESC ,pic.sort_no DESC
+    </select>
+
+</mapper>
