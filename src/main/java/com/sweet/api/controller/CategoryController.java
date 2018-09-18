@@ -4,7 +4,6 @@ package com.sweet.api.controller;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.entity.Resp.CategoryResp;
 import com.sweet.api.service.ICategoryService;
-import com.sweet.api.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
