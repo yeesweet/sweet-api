@@ -1,6 +1,6 @@
 package com.sweet.api.service;
 
-import com.sweet.api.entity.Resp.CategoryResp;
+import com.sweet.api.entity.res.CategoryResp;
 
 import java.util.List;
 

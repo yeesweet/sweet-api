@@ -1,7 +1,7 @@
 package com.sweet.api.service.impl;
 
 import com.sweet.api.entity.Category;
-import com.sweet.api.entity.Resp.CategoryResp;
+import com.sweet.api.entity.res.CategoryResp;
 import com.sweet.api.mapper.CategoryMapper;
 import com.sweet.api.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,8 @@
-package com.sweet.api.entity.Resp;
+package com.sweet.api.entity.res;
 
-import com.sweet.api.entity.Category;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
