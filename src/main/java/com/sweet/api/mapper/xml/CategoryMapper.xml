@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.CategoryMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.Category">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="level" property="level" />
+		<result column="image" property="image" />
+		<result column="sort_no" property="sortNo" />
+		<result column="pid" property="pid" />
+		<result column="display" property="display" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		id, name, level, image, sort_no, pid,display, create_time, update_time, operator
+	</sql>
+
+	<select id="selectCategoryList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_cms_category where display = 1
+		order by sort_no
+	</select>
+</mapper>
