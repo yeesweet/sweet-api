@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="off">
+    <Properties>
+        <Property name="logdir">/data/applogs/sweet-api/</Property>
+    </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level [%file] - %msg%n" />
         </Console>
+        <RollingFile name="RollingFile"
+                     fileName="${logdir}/api.log"
+                     filePattern="${logdir}/api.%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level [%C{36}.%M] - %msg%n" />
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+        </RollingFile>
+        <!-- 只显示error级别的信息 -->
+        <RollingFile name="RollingFileError"
+                     fileName="${logdir}/error.log"
+                     filePattern="${logdir}/error-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS} [%thread] %level [%C{36}.%M:%L] - %msg%xEx%n" />
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+        </RollingFile>
     </Appenders>
     <Loggers>
         <!-- myibatis log configure -->
