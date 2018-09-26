@@ -1,4 +1,6 @@
 #!/bin/sh
-sh package.sh
-cp -rf /root/sweet/sweet-api/target/api.war  /usr/local/sweet-app/sweet-api/deploy
-sh /usr/local/sweet-app/sweet-api/server.sh redeploy
+git pull
+sleep 1
+mvn clean package -Dmaven.test.skip=true
+cp -rf /root/sweet/sweet-api/target/api.jar  /usr/local/sweet-api
+sh /usr/local/sweet-api/restart.sh
