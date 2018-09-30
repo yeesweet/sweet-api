@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sweet.api.mapper.CmsModuleCommodityMapper">
+	<resultMap id="cmsModuleCommodityMapper" type="com.sweet.api.entity.bean.CmsModuleCommodity">
+		<result column="commodity_id" property="commodityId"/>
+		<result column="commodity_code" property="commodityCode"/>
+		<result column="sort_no" property="sortNo"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="module_id" property="moduleId"/>
+		<result column="operator" property="operator"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		commodity_id,
+		commodity_code,
+		sort_no,
+		create_time,
+		update_time,
+		module_id,
+		operator
+	</sql>
+	
+	<select id="queryCmsCommodityList" parameterType="com.sweet.api.entity.bean.CmsModuleCommodity" resultMap="cmsModuleCommodityMapper">
+		select <include refid="Base_Column_List"/> 
+		from tbl_cms_module_commodity
+		where 1=1 <include refid="where"/> 
+		order by sort_no asc,update_time desc
+	</select>
+	
+	<sql id="where">
+		<if test="moduleId != null">
+			and module_id = #{moduleId}
+		</if>
+		<if test="commodityCode != null">
+			and m.commodity_code = #{commodityCode}
+		</if>
+	</sql>
+</mapper>

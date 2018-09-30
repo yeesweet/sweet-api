@@ -20,4 +20,8 @@ public interface CommodityMapper extends SuperMapper<Commodity> {
     Commodity getCommodityByNo(@Param("commodityNo") String commodityNo);
 
     List<CommodityVo> getAllCommodityByItemNo(@Param("itemNo") String itemNo);
+
+    List<CommodityVo> getCommodityList(@Param("nos") List<String> nos,
+                                       @Param("shelv") boolean shelve,
+                                       @Param("instock") boolean instock);
 }

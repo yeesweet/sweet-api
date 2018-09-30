@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.TopicMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.Topic">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="title" property="title" />
+		<result column="sort_no" property="sortNo" />
+		<result column="list_sort" property="listSort" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="is_display" property="isDisplay" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name,title, sort_no, list_sort, start_time, end_time, is_display, status, create_time, update_time, operator
+    </sql>
+
+	<select id="checkTopicName" resultType="int">
+		select count(*) from tbl_cms_topic where 1=1
+		<if test="id !=null ">
+			and id != #{id}
+		</if>
+		and name = #{name}
+	</select>
+
+	<select id="getTopicById" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from tbl_cms_topic where id = #{id}
+	</select>
+
+	<select id="getEffectiveTopicList" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from tbl_cms_topic
+		where is_display = 1 and status = 0 and now() <![CDATA[<=]]> end_time
+		ORDER BY update_time DESC ,sort_no ,create_time DESC
+	</select>
+</mapper>

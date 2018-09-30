@@ -36,4 +36,13 @@ public interface ICommodityService extends IService<Commodity> {
      * @return
      */
     CommodityRes getCommodityDetailJson(String commodityNo);
+
+    /**
+     * 批量查询商品信息 不包含商品主图、详情图、分类信息
+     * @param nos 商品编号
+     * @param shelve 是否只查询上架商品 默认true
+     * @param instock 是否只查询有库存商品 默认true
+     * @return
+     */
+    List<CommodityVo> getCommodityList(List<String> nos, boolean shelve, boolean instock);
 }

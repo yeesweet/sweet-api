@@ -91,4 +91,22 @@
 		ORDER BY cm.commodity_no DESC ,pic.sort_no DESC
     </select>
 
+    <select id="getCommodityList" resultMap="commodityInfoResultMap">
+        SELECT *
+        FROM tbl_cms_commodity
+        WHERE 1=1
+        <if test="shelv">
+            AND commodity_status = 2
+        </if>
+        <if test="instock">
+            <![CDATA[ AND stock > 0 ]]>
+        </if>
+        <if test=" nos != null and nos.size() > 0 ">
+            AND commodity_no IN
+            <foreach item="no" index="index" collection="nos" open="(" separator="," close=")">
+                #{no}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

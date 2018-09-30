@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.TopicCommodityMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.TopicCommodity">
+		<id column="id" property="id" />
+		<result column="topic_id" property="topicId" />
+		<result column="commodity_no" property="commodityNo" />
+		<result column="status" property="status" />
+		<result column="sort_no" property="sortNo" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, topic_id, commodity_no, status, sort_no, create_time, update_time, operator
+    </sql>
+
+	<select id="getCommodityCountByTopicId" parameterType="java.lang.Long" resultType="int">
+		select count(*) from tbl_cms_topic_commodity where topic_id = #{topicId}
+	</select>
+
+	<select id="getCommodityListByTopicId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from tbl_cms_topic_commodity where topic_id = #{topicId} order by sort_no,create_time
+	</select>
+
+	<select id="getCommodityList" parameterType="com.sweet.api.entity.bean.TopicCommodity" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from tbl_cms_topic_commodity where 1=1
+		<if test="commodityNo != null and commodityNo != ''">
+			and commodity_no = #{commodityNo}
+		</if>
+	</select>
+
+	<!--  查询该活动专题编号下的商品 集合		根据它所在的专题活动 -->
+	<select id="getTopicCommodityByTopicIdOfPage" parameterType="java.lang.Long" resultMap="BaseResultMap"  resultSetType="SCROLL_SENSITIVE">
+		SELECT <include refid="Base_Column_List"/>  FROM tbl_cms_topic_commodity
+		WHERE topic_id = #{topicId} order by sort_no ASC
+	</select>
+
+</mapper>

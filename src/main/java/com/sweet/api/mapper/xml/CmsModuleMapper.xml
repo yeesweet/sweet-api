@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sweet.api.mapper.CmsModuleMapper">
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.CmsModule">
+		<result column="id" property="id"/>
+		<result column="module_name" property="moduleName"/>
+		<result column="module_style" property="moduleStyle"/>
+		<result column="module_type" property="moduleType"/>
+		<result column="sort_no" property="sortNo"/>
+		<result column="space" property="space"/>
+		<result column="space_lr" property="spaceLr"/>
+		<result column="width" property="width"/>
+		<result column="height" property="height"/>
+		<result column="start_time" property="startTime"/>
+		<result column="end_time" property="endTime"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="is_display" property="isDisplay"/>
+		<result column="is_delete" property="isDelete"/>
+		<result column="page_manager_id" property="pageManagerId"/>
+		<result column="operator" property="operator"/>
+		<result column="rows" property="rows"/>
+		<result column="cols" property="cols"/>
+		<result column="type_bg" property="typeBg" />
+		<result column="bg" property="bg" />
+	</resultMap>
+	
+	<resultMap id="CmsModuleDetailsMapper" type="com.sweet.api.entity.bean.CmsModule">
+		<result column="id" property="id"/>
+		<result column="module_name" property="moduleName"/>
+		<result column="module_style" property="moduleStyle"/>
+		<result column="module_type" property="moduleType"/>
+		<result column="sort_no" property="sortNo"/>
+		<result column="space" property="space"/>
+		<result column="space_lr" property="spaceLr"/>
+		<result column="width" property="width"/>
+		<result column="height" property="height"/>
+		<result column="start_time" property="startTime"/>
+		<result column="end_time" property="endTime"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="is_display" property="isDisplay"/>
+		<result column="is_delete" property="isDelete"/>
+		<result column="page_manager_id" property="pageManagerId"/>
+		<result column="operator" property="operator"/>
+		<result column="rows" property="rows"/>
+		<result column="cols" property="cols"/>
+		<result column="type_bg" property="typeBg" />
+		<result column="bg" property="bg" />
+		<collection property="moduleDetails" ofType="com.sweet.api.entity.bean.CmsModuleDetails" column="module_id">
+			<result column="detail_id" property="detailId"/>
+			<result column="title" property="title"/>
+			<result column="subtitle" property="subTitle"/>
+			<result column="imgurl" property="imgUrl"/>
+			<result column="sort_no" property="sortNo"/>
+			<result column="subtype" property="subType"/>
+			<result column="common_id" property="commonId"/>
+			<result column="sub_start_time" property="subStartTime"/>
+			<result column="sub_end_time" property="subEndTime"/>
+			<result column="create_time" property="createTime"/>
+			<result column="update_time" property="updateTime"/>
+			<result column="module_id" property="moduleId"/>
+			<result column="operator" property="operator"/>
+		</collection>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id,
+		module_name,
+		module_style,
+		module_type,
+		sort_no,
+		space,
+		space_lr,
+		width,
+		height,
+		start_time,
+		end_time,
+		create_time,
+		update_time,
+		is_display,
+		is_delete,
+		page_manager_id,
+		operator,
+		rows,
+		cols,
+		type_bg,
+		bg
+	</sql>
+	
+	<sql id="Module_And_Details_List">
+		m.id,
+		m.module_name,
+		m.module_style,
+		m.module_type,
+		m.sort_no,
+		m.space,
+		m.space_lr,
+		m.width,
+		m.height,
+		m.start_time,
+		m.end_time,
+		m.create_time,
+		m.update_time,
+		m.is_display,
+		m.is_delete,
+		m.page_manager_id,
+		m.operator,
+		m.rows,
+		m.cols,
+		m.type_bg,
+		m.bg,
+			d.detail_id,
+			d.title,
+			d.subtitle,
+			d.imgurl,
+			d.sort_no,
+			d.subtype,
+			d.common_id,
+			d.sub_start_time,
+			d.sub_end_time,
+			d.create_time,
+			d.update_time,
+			d.module_id,
+			d.operator
+	</sql>
+	
+	<sql id="where">
+		<if test="pageManagerId != null">
+			and m.page_manager_id = #{pageManagerId}
+		</if>
+		<if test="moduleType != null">
+			and m.module_type = #{moduleType}
+		</if>
+		<if test="moduleStyle != null">
+			and m.module_style = #{moduleStyle}
+		</if>
+		<if test="startTime !=null">	 
+			and IF(m.start_time IS NOT NULL and m.end_time IS NOT NULL,	m.start_time <![CDATA[>=]]> #{startTime}
+					,m.start_time IS NULL and m.end_time IS NULL)  
+			and IF(d.sub_start_time IS NOT NULL and d.sub_end_time IS NOT NULL, d.sub_start_time <![CDATA[>=]]> #{startTime} 
+					,d.sub_start_time IS NULL and d.sub_end_time IS NULL)   
+	    </if>	
+	    <if test="endTime !=null">	 
+			and IF(m.start_time IS NOT NULL and m.end_time IS NOT NULL,	m.end_time <![CDATA[<=]]> #{endTime}
+					,m.start_time IS NULL and m.end_time IS NULL)  
+			and IF(d.sub_start_time IS NOT NULL and d.sub_end_time IS NOT NULL, d.sub_end_time <![CDATA[<=]]> #{endTime}
+					,d.sub_start_time IS NULL and d.sub_end_time IS NULL)   
+	    </if>	
+	</sql>
+	
+	<!-- 根据条件查询模块列表 -->
+	<select id="queryCmsModuleList" parameterType="com.sweet.api.entity.bean.CmsModule" resultMap="CmsModuleDetailsMapper">
+		select <include refid="Module_And_Details_List"/> 
+		from tbl_cms_module m
+		left join tbl_cms_module_details d on m.id = d.module_id
+		where m.is_delete = 0 and 
+		IF(m.start_time IS NOT NULL and m.end_time IS NOT NULL,	now() <![CDATA[<=]]> m.end_time,m.start_time IS NULL and m.end_time IS NULL) 
+		and IF(d.sub_start_time IS NOT NULL and d.sub_end_time IS NOT NULL,	
+				now() <![CDATA[<=]]> d.sub_end_time,d.sub_start_time IS NULL and d.sub_end_time IS NULL) 
+		<include refid="where"/> 
+		order by CASE WHEN m.sort_no Is null THEN 1 ELSE 0 End,m.sort_no,m.update_time asc,d.sort_no asc
+	</select>
+	
+
+	<!-- 根据id查询模块详情 -->
+	<select id="getCmsModuleById" parameterType="java.lang.Long" resultMap="CmsModuleDetailsMapper">
+		select <include refid="Module_And_Details_List"/> 
+		from tbl_cms_module m
+		left join tbl_cms_module_details d on m.id = d.module_id
+		where m.id = #{moduleId} and d.module_id = #{moduleId} order by d.sort_no asc
+	</select>
+
+	<!-- 查询模块列表详情(为app和touch提供接口) -->
+	<select id="queryCmsModuleDetailsForClient" parameterType="com.sweet.api.entity.bean.CmsModule" resultMap="CmsModuleDetailsMapper">
+		select <include refid="Module_And_Details_List"/> 
+		from tbl_cms_module m
+		left join tbl_cms_module_details d on m.id = d.module_id
+		where m.is_delete = 0 and m.is_display = 1 and 
+		IF(m.start_time IS NOT NULL and m.end_time IS NOT NULL,	now() between m.start_time and m.end_time,m.start_time IS NULL and m.end_time IS NULL) 
+		and IF(d.sub_start_time IS NOT NULL and d.sub_end_time IS NOT NULL,	
+				now() between d.sub_start_time and d.sub_end_time,d.sub_start_time IS NULL and d.sub_end_time IS NULL)  
+		<include refid="where"/> 
+		order by m.sort_no asc,m.update_time desc,d.sort_no asc
+	</select>
+</mapper>

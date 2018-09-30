@@ -124,4 +124,16 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         res.setDownDate(commodity.getDownDate());
         return res;
     }
+
+
+    @Override
+    public List<CommodityVo> getCommodityList(List<String> nos, boolean shelve, boolean instock) {
+        if(nos == null){
+            return null;
+        }
+        if(nos.size() == 0){
+            return null;
+        }
+        return commodityMapper.getCommodityList(nos, shelve, instock);
+    }
 }

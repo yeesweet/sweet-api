@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.PageManagerMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.PageManager">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="top_name" property="topName" />
+		<result column="type" property="type" />
+		<result column="type_bg" property="typeBg" />
+		<result column="bg" property="bg" />
+		<result column="is_display" property="isDisplay" />
+		<result column="is_delete" property="isDelete" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, top_name AS topName, type, type_bg AS typeBg, bg, is_display AS isDisplay, is_delete AS isDelete, create_time AS createTime, update_time AS updateTime, operator
+    </sql>
+
+	<sql id="where">
+		<if test="id != null and id != ''">
+			and id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			and name LIKE CONCAT ('%',#{name},'%')
+		</if>
+		<if test="type != null">
+			and type = #{type}
+		</if>
+		<if test="isDisplay != null">
+			and is_display = #{isDisplay}
+		</if>
+		<if test="isDelete != null">
+			and is_delete = #{isDelete}
+		</if>
+	</sql>
+
+	<!-- 根据条件查询活动页列表 -->
+	<select id="getPageManagerList" resultMap="BaseResultMap" parameterType="com.sweet.api.entity.bean.PageManager">
+		select
+		<include refid="Base_Column_List" />
+		from tbl_cms_page_manager where 1=1
+		<include refid="where"/>
+		order by update_time desc
+	</select>
+
+</mapper>
