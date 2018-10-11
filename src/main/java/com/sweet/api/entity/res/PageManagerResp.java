@@ -38,6 +38,6 @@ public class PageManagerResp {
      */
 	private String bg;
 
-    private List<CmsModule> moduleList;
+    private List<CmsModuleResp> moduleList;
 
 }

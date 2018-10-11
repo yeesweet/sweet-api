@@ -2,14 +2,19 @@ package com.sweet.api.controller;
 
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.entity.bean.CmsModule;
+import com.sweet.api.entity.bean.CmsModuleDetails;
 import com.sweet.api.entity.bean.PageManager;
+import com.sweet.api.entity.res.CmsModuleDetailsResp;
+import com.sweet.api.entity.res.CmsModuleResp;
 import com.sweet.api.entity.res.PageManagerResp;
 import com.sweet.api.service.ICmsModuleService;
 import com.sweet.api.service.IPageManagerService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -63,7 +68,26 @@ public class PageManagerController{
 				cmsModule.setPageManagerId(pageManagerOne.getId());
 				List<CmsModule> modules = cmsModuleService.queryCmsModuleDetailsForClient(cmsModule);
 				if(modules != null && modules.size()>0){
-					pageManagerResp.setModuleList(modules);
+					List<CmsModuleResp> moduleRespList = new ArrayList<>();
+					for(int i=0;i<modules.size();i++){
+						CmsModule module = modules.get(i);
+						CmsModuleResp cmsModuleResp = new CmsModuleResp();
+						BeanUtils.copyProperties(module,cmsModuleResp);
+
+						List<CmsModuleDetails> moduleDetailsList = module.getModuleDetails();
+						if(moduleDetailsList != null && moduleDetailsList.size()>0){
+							List<CmsModuleDetailsResp> cmsModuleDetailsRespList = new ArrayList<>();
+							for(int j=0;j<moduleDetailsList.size();j++){
+								CmsModuleDetails cmsModuleDetails = moduleDetailsList.get(j);
+								CmsModuleDetailsResp cmsModuleDetailsResp = new CmsModuleDetailsResp();
+								BeanUtils.copyProperties(cmsModuleDetails,cmsModuleDetailsResp);
+								cmsModuleDetailsRespList.add(cmsModuleDetailsResp);
+							}
+							cmsModuleResp.setModuleDetails(cmsModuleDetailsRespList);
+						}
+						moduleRespList.add(cmsModuleResp);
+					}
+					pageManagerResp.setModuleList(moduleRespList);
 				}
 			}
 
