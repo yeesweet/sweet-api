@@ -1,6 +1,8 @@
 package com.sweet.api.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sweet.api.commons.CommodityCacheKey;
 import com.sweet.api.entity.Commodity;
 import com.sweet.api.entity.CommodityPics;
 import com.sweet.api.entity.res.CommodityRes;
@@ -9,12 +11,16 @@ import com.sweet.api.entity.vo.CommodityVo;
 import com.sweet.api.mapper.CommodityMapper;
 import com.sweet.api.service.ICommodityService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -27,8 +33,13 @@ import java.util.List;
 @Service
 public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity> implements ICommodityService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommodityServiceImpl.class);
+
     @Autowired
     private CommodityMapper commodityMapper;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public Commodity getCommodityByNo(String commodityNo) {
@@ -39,27 +50,42 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     @Override
     public List<CommodityVo> getAllCommodityByItemNo(String itemNo) {
         Assert.hasText(itemNo, "货号为空");
-        List<CommodityVo> list = commodityMapper.getAllCommodityByItemNo(itemNo);
-        if (list != null && list.size() > 0) {
-            for (CommodityVo vo : list) {
-                final List<CommodityPics> pics = vo.getPics();
-                List<String> mainPics = new ArrayList<>();
-                List<String> descPics = new ArrayList<>();
-                if (pics != null && pics.size() > 0) {
-                    for (CommodityPics pic : pics) {
-                        final Integer type = pic.getType();
-                        //大图
-                        if (1 == type) {
-                            mainPics.add(pic.getImage());
-                            //详情图
-                        } else if (2 == type) {
-                            descPics.add(pic.getImage());
+        List<CommodityVo> list = null;
+        String key = CommodityCacheKey.getItemNoCacheKey(itemNo);
+        boolean getDB = true;
+        try {
+            if (redisTemplate.hasKey(key)) {
+                String json = redisTemplate.opsForValue().get(key);
+                list = JSON.parseArray(json, CommodityVo.class);
+                getDB = false;
+            }
+        } catch (Exception e) {
+            logger.error("通过redis获取值出错，key:{}", key, e);
+        }
+        if (getDB || list == null) {
+            list = commodityMapper.getAllCommodityByItemNo(itemNo);
+            if (list != null && list.size() > 0) {
+                for (CommodityVo vo : list) {
+                    final List<CommodityPics> pics = vo.getPics();
+                    List<String> mainPics = new ArrayList<>();
+                    List<String> descPics = new ArrayList<>();
+                    if (pics != null && pics.size() > 0) {
+                        for (CommodityPics pic : pics) {
+                            final Integer type = pic.getType();
+                            //大图
+                            if (1 == type) {
+                                mainPics.add(pic.getImage());
+                                //详情图
+                            } else if (2 == type) {
+                                descPics.add(pic.getImage());
+                            }
                         }
                     }
+                    vo.setMainPics(mainPics);
+                    vo.setDescPics(descPics);
                 }
-                vo.setMainPics(mainPics);
-                vo.setDescPics(descPics);
             }
+            redisTemplate.opsForValue().set(key, JSON.toJSONString(list), 1 * 60 * 60, TimeUnit.SECONDS);
         }
         return list;
     }
@@ -79,7 +105,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         res = convertCommodityToCommodityRes(commodity, res);
         //组装图片信息
         if (sameItemNoCommodityVos != null && sameItemNoCommodityVos.size() > 0) {
-            List<SameCommodityRes> sames=new ArrayList<>(sameItemNoCommodityVos.size());
+            List<SameCommodityRes> sames = new ArrayList<>(sameItemNoCommodityVos.size());
             for (CommodityVo vo : sameItemNoCommodityVos) {
                 final String no = vo.getCommodityNo();
                 SameCommodityRes same = new SameCommodityRes();
@@ -128,10 +154,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
 
     @Override
     public List<CommodityVo> getCommodityList(List<String> nos, boolean shelve, boolean instock) {
-        if(nos == null){
+        if (nos == null) {
             return null;
         }
-        if(nos.size() == 0){
+        if (nos.size() == 0) {
             return null;
         }
         return commodityMapper.getCommodityList(nos, shelve, instock);
