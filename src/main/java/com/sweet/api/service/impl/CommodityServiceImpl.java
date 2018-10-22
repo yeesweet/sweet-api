@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sweet.api.commons.CommodityCacheKey;
 import com.sweet.api.entity.Commodity;
 import com.sweet.api.entity.CommodityPics;
+import com.sweet.api.entity.req.CommodityListReq;
 import com.sweet.api.entity.res.CommodityRes;
 import com.sweet.api.entity.res.SameCommodityRes;
 import com.sweet.api.entity.vo.CommodityVo;
@@ -161,5 +162,10 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
             return null;
         }
         return commodityMapper.getCommodityList(nos, shelve, instock);
+    }
+
+    @Override
+    public List<CommodityVo> getCommoditySearchList(CommodityListReq commodityListReq) {
+        return commodityMapper.getCommoditySearchList(commodityListReq);
     }
 }

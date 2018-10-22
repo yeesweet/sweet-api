@@ -2,6 +2,7 @@ package com.sweet.api.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sweet.api.entity.Commodity;
+import com.sweet.api.entity.req.CommodityListReq;
 import com.sweet.api.entity.res.CommodityRes;
 import com.sweet.api.entity.vo.CommodityVo;
 
@@ -45,4 +46,11 @@ public interface ICommodityService extends IService<Commodity> {
      * @return
      */
     List<CommodityVo> getCommodityList(List<String> nos, boolean shelve, boolean instock);
+
+    /**
+     * 商品列表查询接口
+     * @param commodityListReq
+     * @return
+     */
+    public List<CommodityVo> getCommoditySearchList(CommodityListReq commodityListReq);
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.CategoryCommodityMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.CategoryCommodity">
+		<id column="id" property="id" />
+		<result column="category_id" property="categoryId" />
+		<result column="commodity_no" property="commodityNo" />
+		<result column="create_time" property="createTime" />
+		<result column="operator" property="operator" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, category_id AS categoryId, commodity_no AS commodityNo, create_time AS createTime, operator
+    </sql>
+
+	<select id="getCategoryCommodity" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select <include refid="Base_Column_List"/> from tbl_cms_category_commodity where category_id=#{categoryId}
+	</select>
+</mapper>

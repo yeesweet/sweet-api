@@ -109,4 +109,26 @@
         </if>
     </select>
 
+    <select id="getCommoditySearchList" resultMap="commodityInfoResultMap" parameterType="com.sweet.api.entity.req.CommodityListReq">
+        SELECT *
+        FROM tbl_cms_commodity
+        WHERE commodity_status = 2 <![CDATA[ AND stock > 0 ]]>
+        <if test="commodityName!=null and commodityName!=''">
+            and instr(commodity_name, '${commodityName}')>0
+        </if>
+        <if test=" nos != null and nos.size() > 0 ">
+            AND commodity_no IN
+            <foreach item="no" index="index" collection="nos" open="(" separator="," close=")">
+                #{no}
+            </foreach>
+        </if>
+        <if test="sortOrder != null">
+            order by
+            <if test="sortOrder == 1"> sales_quantity desc </if>
+            <if test="sortOrder == 2"> show_date desc </if>
+            <if test="sortOrder == 3"> sale_price asc </if>
+            <if test="sortOrder == 4"> sale_price desc </if>
+        </if>
+    </select>
+
 </mapper>

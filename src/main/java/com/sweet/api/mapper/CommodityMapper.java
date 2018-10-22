@@ -2,6 +2,7 @@ package com.sweet.api.mapper;
 
 import com.sweet.api.commons.SuperMapper;
 import com.sweet.api.entity.Commodity;
+import com.sweet.api.entity.req.CommodityListReq;
 import com.sweet.api.entity.vo.CommodityVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,4 +25,6 @@ public interface CommodityMapper extends SuperMapper<Commodity> {
     List<CommodityVo> getCommodityList(@Param("nos") List<String> nos,
                                        @Param("shelv") boolean shelve,
                                        @Param("instock") boolean instock);
+
+    List<CommodityVo> getCommoditySearchList(CommodityListReq commodityListReq);
 }
