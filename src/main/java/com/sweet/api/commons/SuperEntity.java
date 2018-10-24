@@ -16,7 +16,7 @@ public class SuperEntity<T extends Model> extends Model<T> {
      * 主键ID , 这里故意演示注解可以无
      */
     @TableId("id")
-    private Long id;
+    private String id;
 
     @Override
     protected Serializable pkVal() {

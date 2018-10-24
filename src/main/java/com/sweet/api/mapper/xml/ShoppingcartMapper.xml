@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.ShoppingcartMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sweet.api.entity.ShoppingCart">
+        <id column="id" property="id"/>
+        <result column="login_id" property="loginId"/>
+        <result column="link_buy" property="linkBuy"/>
+        <result column="sp_md5" property="spMd5"/>
+        <result column="item_md5" property="itemMd5"/>
+        <result column="commodity_no" property="commodityNo"/>
+        <result column="num" property="num"/>
+        <result column="is_checked" property="isChecked"/>
+        <result column="add_price" property="addPrice"/>
+        <result column="add_time" property="addTime"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, login_id, link_buy, sp_md5, item_md5, commodity_no, is_checked, add_price, add_time
+    </sql>
+
+    <select id="getShoppingCartProductNum" resultType="java.lang.Integer">
+        SELECT SUM(num) FROM tbl_shoppingcart WHERE del_flag = 1 AND login_id = #{loginId}
+    </select>
+
+    <update id="updateBatch">
+        update tbl_shoppingcart
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="del_flag =case" suffix="end,">
+                <foreach collection="carts" item="cart" index="index">
+                    <if test="cart.delFlag!=null">
+                        when id=#{cart.id} then #{cart.delFlag}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" is_checked =case" suffix="end,">
+                <foreach collection="carts" item="cart" index="index">
+                    <if test="cart.isChecked!=null">
+                        when id=#{cart.id} then #{cart.isChecked}
+                    </if>
+                </foreach>
+            </trim>
+
+            <trim prefix=" num =case" suffix="end,">
+                <foreach collection="carts" item="cart" index="index">
+                    <if test="cart.num!=null and cart.num > 0 ">
+                        when id=#{cart.id} then #{cart.num}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where 1=1
+        <if test=" loginId!=null and loginId!=''">
+            AND login_id = #{loginId}
+        </if>
+        AND id IN
+        <foreach collection="carts" index="index" item="cart" separator="," open="(" close=")">
+            #{cart.id}
+        </foreach>
+    </update>
+</mapper>

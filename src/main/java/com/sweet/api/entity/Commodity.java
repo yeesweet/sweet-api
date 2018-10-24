@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,7 +20,6 @@ import java.util.Date;
  * @since 2018-09-17
  */
 @Data
-@ToString
 @TableName("tbl_cms_commodity")
 public class Commodity extends Model<Commodity> {
 
