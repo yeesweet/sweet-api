@@ -92,8 +92,10 @@
     </select>
 
     <select id="getCommodityList" resultMap="commodityInfoResultMap">
-        SELECT *
-        FROM tbl_cms_commodity
+        SELECT cm.*,
+               pr.id AS rid, pr.prop_no, pr.prop_name, pr.type AS type
+        FROM tbl_cms_commodity cm
+        LEFT JOIN tbl_cms_commodity_prop pr ON cm.prop_no = pr.prop_no
         WHERE 1=1
         <if test="shelv">
             AND commodity_status = 2

@@ -20,6 +20,7 @@ public class CommodityColumnVo implements Serializable{
     /**
      * 加入购物车日期
      */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date addDate;
     /**
      * 加入购物车价格
@@ -81,6 +82,10 @@ public class CommodityColumnVo implements Serializable{
      * 属性编码
      */
     private String propNo;
+    /**
+     * 属性名称
+     */
+    private String propName;
     /**
      * 1下架(停售),2上架(在售)，3停用,(启用重新变成1),4预售,5待进货,6待售 7 售罄
      */

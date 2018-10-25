@@ -20,11 +20,11 @@ public class ShoppingCartConstant {
     /**
      * 1 表示选中状态
      */
-    public static final short BUY_STATUS_CHECKED = 1;
+    public static final int BUY_STATUS_CHECKED = 1;
     /**
      * 0 表示不选中状态
      */
-    public static final short BUY_STATUS_UNCHECKED = 0;
+    public static final int BUY_STATUS_UNCHECKED = 0;
     /**
      * 购物车缓存默认天数
      */
@@ -36,7 +36,7 @@ public class ShoppingCartConstant {
     /**
      * 满多少免邮费
      */
-    public static double POSTAGE_FREE_AMOUNT = 99;
+    public static double POSTAGE_FREE_AMOUNT = 79;
     /**
      * 最小成单金额
      */
