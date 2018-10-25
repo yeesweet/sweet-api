@@ -3,8 +3,8 @@ package com.sweet.api.entity.res;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -13,8 +13,7 @@ import java.util.List;
  * @date 2018/9/18.
  */
 @Data
-@ToString
-public class CommodityRes {
+public class CommodityResp implements Serializable {
 
     private Long id;
     /**
@@ -93,6 +92,6 @@ public class CommodityRes {
     /**
      * 同一货号下的商品
      */
-    private List<SameCommodityRes> sameCommodity;
+    private List<SameCommodityResp> sameCommodity;
 
 }

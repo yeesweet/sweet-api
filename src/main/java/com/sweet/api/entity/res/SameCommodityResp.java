@@ -1,15 +1,15 @@
 package com.sweet.api.entity.res;
 
 import lombok.Data;
-import lombok.ToString;
+
+import java.io.Serializable;
 
 /**
  * @author zhang.hp
  * @date 2018/9/18.
  */
 @Data
-@ToString
-public class SameCommodityRes {
+public class SameCommodityResp implements Serializable {
     private String commodityNo;
     private String propNo;
     private String propName;

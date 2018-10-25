@@ -3,7 +3,7 @@ package com.sweet.api.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sweet.api.entity.Commodity;
 import com.sweet.api.entity.req.CommodityListReq;
-import com.sweet.api.entity.res.CommodityRes;
+import com.sweet.api.entity.res.CommodityResp;
 import com.sweet.api.entity.vo.CommodityVo;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public interface ICommodityService extends IService<Commodity> {
      * @param commodityNo
      * @return
      */
-    CommodityRes getCommodityDetailJson(String commodityNo);
+    CommodityResp getCommodityDetailJson(String commodityNo);
 
     /**
      * 批量查询商品信息 不包含商品主图、详情图、分类信息

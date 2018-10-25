@@ -6,18 +6,16 @@ import com.sweet.api.entity.bean.CategoryCommodity;
 import com.sweet.api.entity.bean.TopicCommodity;
 import com.sweet.api.entity.req.CommodityListReq;
 import com.sweet.api.entity.res.CommodityListResp;
-import com.sweet.api.entity.res.CommodityRes;
+import com.sweet.api.entity.res.CommodityResp;
 import com.sweet.api.entity.vo.CommodityVo;
 import com.sweet.api.service.ICategoryCommodityService;
 import com.sweet.api.service.ICommodityService;
 import com.sweet.api.service.ITopicCommodityService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +43,7 @@ public class CommodityController {
         if (StringUtils.isBlank(commodityNo)) {
             return new ResponseMessage<>(0, "commodityNo为空");
         }
-        CommodityRes res = commodityService.getCommodityDetailJson(commodityNo);
+        CommodityResp res = commodityService.getCommodityDetailJson(commodityNo);
         return new ResponseMessage<>(0, "success", res);
     }
 

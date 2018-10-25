@@ -4,8 +4,8 @@ package com.sweet.api.controller;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
 import com.sweet.api.entity.req.AddCartReq;
+import com.sweet.api.entity.res.ShoppingCartResp;
 import com.sweet.api.entity.vo.ShoppingCartResultVo;
-import com.sweet.api.entity.vo.ShoppingCartVo;
 import com.sweet.api.service.IShoppingcartService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,18 @@ import java.util.Map;
  */
 @RestController
 public class ShoppingcartController {
+
     @Autowired
     private IShoppingcartService shoppingcartService;
 
-    @RequestMapping("carList")
+    /**
+     * 查询购物车
+     *
+     * @param loginId
+     * @param linkBuy
+     * @return
+     */
+    @RequestMapping("cartList")
     public Object carList(String loginId, Integer linkBuy) {
         if (null == linkBuy) {
             return new ResponseMessage<>(0, "linkBuy为空");
@@ -39,10 +47,18 @@ public class ShoppingcartController {
         ShoppingCartBaseInfo info = new ShoppingCartBaseInfo();
         info.setLinkBuy(linkBuy);
         info.setLoginId(loginId);
-        ShoppingCartVo shoppingCartVo = shoppingcartService.checkAndCalculate(info, false);
-        return new ResponseMessage<>(1, "success", shoppingCartVo);
+        ShoppingCartResp resp = shoppingcartService.getCartListResp(info);
+        return new ResponseMessage<>(1, "success", resp);
     }
 
+    /**
+     * 添加商品到购物车
+     *
+     * @param cartReqs
+     * @param loginId
+     * @param linkBuy
+     * @return
+     */
     @PostMapping("addToCart")
     public Object addCommodityToCart(@RequestBody List<AddCartReq> cartReqs, String loginId, Integer linkBuy) {
         if (null == linkBuy) {
@@ -75,8 +91,16 @@ public class ShoppingcartController {
         return new ResponseMessage<>(code, resultMsg);
     }
 
+    /**
+     * 从购物车中删除商品
+     *
+     * @param rowIds
+     * @param loginId
+     * @param linkBuy
+     * @return
+     */
     @PostMapping("removeFromCart")
-    public Object removeFromCart(@RequestBody String[] rowIds, String loginId, Integer linkBuy){
+    public Object removeFromCart(@RequestBody String[] rowIds, String loginId, Integer linkBuy) {
         ShoppingCartBaseInfo info = new ShoppingCartBaseInfo();
         info.setLinkBuy(linkBuy);
         info.setLoginId(loginId);
@@ -89,6 +113,15 @@ public class ShoppingcartController {
         }
         return new ResponseMessage<>(code, resultMsg);
     }
+
+    /**
+     * 修改购物车商品数量
+     *
+     * @param cartReqs
+     * @param loginId
+     * @param linkBuy
+     * @return
+     */
     @PostMapping("updateFromCart")
     public Object updateFromCart(@RequestBody List<AddCartReq> cartReqs, String loginId, Integer linkBuy) {
         if (null == linkBuy) {
@@ -120,6 +153,15 @@ public class ShoppingcartController {
         }
         return new ResponseMessage<>(code, resultMsg);
     }
+
+    /**
+     * 购物车商品勾选
+     *
+     * @param cartReqs
+     * @param loginId
+     * @param linkBuy
+     * @return
+     */
     @PostMapping("modifyStatus")
     public Object modifyStatus(@RequestBody List<AddCartReq> cartReqs, String loginId, Integer linkBuy) {
         if (null == linkBuy) {
@@ -138,7 +180,7 @@ public class ShoppingcartController {
         for (AddCartReq req : cartReqs) {
             final String rowId = req.getRowId();
             final Integer status = req.getStatus();
-            if (StringUtils.isNoneBlank(rowId) && status != null ) {
+            if (StringUtils.isNoneBlank(rowId) && status != null) {
                 map.put(rowId, status);
             }
         }

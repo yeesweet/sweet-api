@@ -3,11 +3,14 @@ package com.sweet.api.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sweet.api.commons.BeanUtils;
 import com.sweet.api.commons.Md5Encrypt;
+import com.sweet.api.commons.SortUtils;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.Commodity;
 import com.sweet.api.entity.ShoppingCart;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
+import com.sweet.api.entity.res.ShoppingCartResp;
 import com.sweet.api.entity.vo.CommodityColumnVo;
 import com.sweet.api.entity.vo.CommodityVo;
 import com.sweet.api.entity.vo.ShoppingCartResultVo;
@@ -465,5 +468,35 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
             logger.error(loginId + "_批量修改购物车失败:", e);
             return false;
         }
+    }
+
+    @Override
+    public ShoppingCartResp getCartListResp(ShoppingCartBaseInfo info) {
+        //查询购物车列表
+        ShoppingCartVo shoppingCartVo = checkAndCalculate(info, false);
+        if (shoppingCartVo == null) {
+            return null;
+        }
+        ShoppingCartResp resp = BeanUtils.copy(shoppingCartVo, ShoppingCartResp.class);
+        final List<CommodityColumnVo> list = shoppingCartVo.getCommodityColumnVoList();
+        //过滤出失效商品
+        if (list != null && list.size() > 0) {
+            List<CommodityColumnVo> commodities = new ArrayList<>();
+            List<CommodityColumnVo> abateCommodities = new ArrayList<>();
+            for (CommodityColumnVo vo : list) {
+                final Integer status = vo.getStatus();
+                if (status == 2) { //在售
+                    commodities.add(vo);
+                } else {
+                    abateCommodities.add(vo);
+                }
+            }
+            //按照addTime排序
+            commodities = SortUtils.sortList(commodities, "addDate", SortUtils.SortType.DESC);
+            abateCommodities = SortUtils.sortList(abateCommodities, "addDate", SortUtils.SortType.DESC);
+            resp.setCommodities(commodities);
+            resp.setAbateCommodities(abateCommodities);
+        }
+        return resp;
     }
 }

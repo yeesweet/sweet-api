@@ -6,8 +6,8 @@ import com.sweet.api.commons.CommodityCacheKey;
 import com.sweet.api.entity.Commodity;
 import com.sweet.api.entity.CommodityPics;
 import com.sweet.api.entity.req.CommodityListReq;
-import com.sweet.api.entity.res.CommodityRes;
-import com.sweet.api.entity.res.SameCommodityRes;
+import com.sweet.api.entity.res.CommodityResp;
+import com.sweet.api.entity.res.SameCommodityResp;
 import com.sweet.api.entity.vo.CommodityVo;
 import com.sweet.api.mapper.CommodityMapper;
 import com.sweet.api.service.ICommodityService;
@@ -92,7 +92,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     }
 
     @Override
-    public CommodityRes getCommodityDetailJson(String commodityNo) {
+    public CommodityResp getCommodityDetailJson(String commodityNo) {
         //获取商品基本信息
         final Commodity commodity = getCommodityByNo(commodityNo);
         if (commodity == null) {
@@ -102,14 +102,14 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         //获取同一货号下的所有商品
         final List<CommodityVo> sameItemNoCommodityVos = getAllCommodityByItemNo(itemNo);
         //组装json格式数据
-        CommodityRes res = new CommodityRes();
+        CommodityResp res = new CommodityResp();
         res = convertCommodityToCommodityRes(commodity, res);
         //组装图片信息
         if (sameItemNoCommodityVos != null && sameItemNoCommodityVos.size() > 0) {
-            List<SameCommodityRes> sames = new ArrayList<>(sameItemNoCommodityVos.size());
+            List<SameCommodityResp> sames = new ArrayList<>(sameItemNoCommodityVos.size());
             for (CommodityVo vo : sameItemNoCommodityVos) {
                 final String no = vo.getCommodityNo();
-                SameCommodityRes same = new SameCommodityRes();
+                SameCommodityResp same = new SameCommodityResp();
                 boolean isDefault = false;
                 if (StringUtils.equalsIgnoreCase(no, commodityNo)) {
                     res.setMainPics(vo.getMainPics());
@@ -127,7 +127,7 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
         return res;
     }
 
-    private CommodityRes convertCommodityToCommodityRes(Commodity commodity, CommodityRes res) {
+    private CommodityResp convertCommodityToCommodityRes(Commodity commodity, CommodityResp res) {
         Assert.notNull(commodity, "商品信息为空");
         res.setId(commodity.getId());
         res.setCommodityNo(commodity.getCommodityNo());

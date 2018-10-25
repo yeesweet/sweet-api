@@ -3,6 +3,7 @@ package com.sweet.api.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sweet.api.entity.ShoppingCart;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
+import com.sweet.api.entity.res.ShoppingCartResp;
 import com.sweet.api.entity.vo.ShoppingCartResultVo;
 import com.sweet.api.entity.vo.ShoppingCartVo;
 
@@ -111,5 +112,11 @@ public interface IShoppingcartService extends IService<ShoppingCart> {
      */
     boolean updateBatch(List<ShoppingCart> carts,String loginId);
 
+    /**
+     * 获取购物车商品列表
+     * @param info
+     * @return
+     */
 
+    ShoppingCartResp getCartListResp(ShoppingCartBaseInfo info);
 }
