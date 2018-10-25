@@ -41,10 +41,10 @@ public class CommodityController {
     @RequestMapping("/detail")
     public Object getCommodityDetail(String commodityNo) {
         if (StringUtils.isBlank(commodityNo)) {
-            return new ResponseMessage<>(0, "commodityNo为空");
+            return new ResponseMessage<>(1, "commodityNo为空");
         }
         CommodityResp res = commodityService.getCommodityDetailJson(commodityNo);
-        return new ResponseMessage<>(0, "success", res);
+        return new ResponseMessage<>(1, "success", res);
     }
 
     /**
@@ -56,11 +56,11 @@ public class CommodityController {
     public Object getCommodityList(CommodityListReq commodityListReq) {
         List<CommodityListResp> commodityList = new ArrayList<>();
         if(commodityListReq.getType() == null){
-            return new ResponseMessage<>(0, "商品列表类型不能为空");
+            return new ResponseMessage<>(1, "商品列表类型不能为空");
         }
         if(commodityListReq.getType() == 2 || commodityListReq.getType() == 3){
             if(commodityListReq.getParamId() == null){
-                return new ResponseMessage<>(0, "商品列表参数id不能为空");
+                return new ResponseMessage<>(1, "商品列表参数id不能为空");
             }
         }
         if(commodityListReq.getSortOrder() == null){
@@ -113,7 +113,7 @@ public class CommodityController {
                 }
             }
         }
-        return new ResponseMessage<>(commodityList);
+        return new ResponseMessage<>(0,"success",commodityList);
     }
 
 }

@@ -8,6 +8,7 @@ import com.sweet.api.commons.Md5Encrypt;
 import com.sweet.api.commons.SortUtils;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.Commodity;
+import com.sweet.api.entity.CommodityProp;
 import com.sweet.api.entity.ShoppingCart;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
 import com.sweet.api.entity.res.ShoppingCartResp;
@@ -399,6 +400,10 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
                     commodityColumnVo.setCostPrice(commodity.getCostPrice());
                     commodityColumnVo.setStock(commodity.getStock());
                     commodityColumnVo.setPropNo(commodity.getPropNo());
+                    final CommodityProp prop = commodity.getProp();
+                    if (null != prop) {
+                        commodityColumnVo.setPropName(prop.getPropName());
+                    }
                     commodityColumnVo.setNum(cart.getNum());
                     Integer status = commodity.getCommodityStatus();
                     if (commodity.getStock() <= 0) {

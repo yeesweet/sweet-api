@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2018/10/23.
  */
 @Data
-public class AddCartReq {
+public class ShoppingCartReq {
     private String commodityNo;
     private Integer count;
     private String rowId;

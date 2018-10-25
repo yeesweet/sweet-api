@@ -3,7 +3,7 @@ package com.sweet.api.controller;
 
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
-import com.sweet.api.entity.req.AddCartReq;
+import com.sweet.api.entity.req.ShoppingCartReq;
 import com.sweet.api.entity.res.ShoppingCartResp;
 import com.sweet.api.entity.vo.ShoppingCartResultVo;
 import com.sweet.api.service.IShoppingcartService;
@@ -42,13 +42,13 @@ public class ShoppingcartController {
     @RequestMapping("cartList")
     public Object carList(String loginId, Integer linkBuy) {
         if (null == linkBuy) {
-            return new ResponseMessage<>(0, "linkBuy为空");
+            return new ResponseMessage<>(1, "linkBuy为空");
         }
         ShoppingCartBaseInfo info = new ShoppingCartBaseInfo();
         info.setLinkBuy(linkBuy);
         info.setLoginId(loginId);
         ShoppingCartResp resp = shoppingcartService.getCartListResp(info);
-        return new ResponseMessage<>(1, "success", resp);
+        return new ResponseMessage<>(0, "success", resp);
     }
 
     /**
@@ -60,21 +60,21 @@ public class ShoppingcartController {
      * @return
      */
     @PostMapping("addToCart")
-    public Object addCommodityToCart(@RequestBody List<AddCartReq> cartReqs, String loginId, Integer linkBuy) {
+    public Object addCommodityToCart(@RequestBody List<ShoppingCartReq> cartReqs, String loginId, Integer linkBuy) {
         if (null == linkBuy) {
-            return new ResponseMessage<>(0, "linkBuy为空");
+            return new ResponseMessage<>(1, "linkBuy为空");
         }
         if (null == cartReqs) {
-            return new ResponseMessage<>(0, "商品为空");
+            return new ResponseMessage<>(1, "商品为空");
         }
         if (cartReqs.size() <= 0) {
-            return new ResponseMessage<>(0, "商品为空");
+            return new ResponseMessage<>(1, "商品为空");
         }
         ShoppingCartBaseInfo info = new ShoppingCartBaseInfo();
         info.setLinkBuy(linkBuy);
         info.setLoginId(loginId);
         Map<String, Integer> map = new HashMap<>(cartReqs.size());
-        for (AddCartReq req : cartReqs) {
+        for (ShoppingCartReq req : cartReqs) {
             final String commodityNo = req.getCommodityNo();
             final Integer count = req.getCount();
             if (StringUtils.isNoneBlank(commodityNo) && count != null && count > 0) {
@@ -84,9 +84,9 @@ public class ShoppingcartController {
         ShoppingCartResultVo resultVo = shoppingcartService.addProductToCart(map, info);
         final boolean successFlag = resultVo.getSuccessFlag();
         final String resultMsg = resultVo.getResultMsg();
-        int code = 0;
+        int code = 1;
         if (successFlag) {
-            code = 1;
+            code = 0;
         }
         return new ResponseMessage<>(code, resultMsg);
     }
@@ -107,9 +107,9 @@ public class ShoppingcartController {
         final ShoppingCartResultVo resultVo = shoppingcartService.removeProductFromCart(rowIds, info);
         final boolean successFlag = resultVo.getSuccessFlag();
         final String resultMsg = resultVo.getResultMsg();
-        int code = 0;
+        int code = 1;
         if (successFlag) {
-            code = 1;
+            code = 0;
         }
         return new ResponseMessage<>(code, resultMsg);
     }
@@ -123,21 +123,21 @@ public class ShoppingcartController {
      * @return
      */
     @PostMapping("updateFromCart")
-    public Object updateFromCart(@RequestBody List<AddCartReq> cartReqs, String loginId, Integer linkBuy) {
+    public Object updateFromCart(@RequestBody List<ShoppingCartReq> cartReqs, String loginId, Integer linkBuy) {
         if (null == linkBuy) {
-            return new ResponseMessage<>(0, "linkBuy为空");
+            return new ResponseMessage<>(1, "linkBuy为空");
         }
         if (null == cartReqs) {
-            return new ResponseMessage<>(0, "商品为空");
+            return new ResponseMessage<>(1, "商品为空");
         }
         if (cartReqs.size() <= 0) {
-            return new ResponseMessage<>(0, "商品为空");
+            return new ResponseMessage<>(1, "商品为空");
         }
         ShoppingCartBaseInfo info = new ShoppingCartBaseInfo();
         info.setLinkBuy(linkBuy);
         info.setLoginId(loginId);
         Map<String, Integer> map = new HashMap<>(cartReqs.size());
-        for (AddCartReq req : cartReqs) {
+        for (ShoppingCartReq req : cartReqs) {
             final String rowId = req.getRowId();
             final Integer count = req.getCount();
             if (StringUtils.isNoneBlank(rowId) && count != null && count > 0) {
@@ -147,9 +147,9 @@ public class ShoppingcartController {
         ShoppingCartResultVo resultVo = shoppingcartService.updateProductFromCart(map, info);
         final boolean successFlag = resultVo.getSuccessFlag();
         final String resultMsg = resultVo.getResultMsg();
-        int code = 0;
+        int code = 1;
         if (successFlag) {
-            code = 1;
+            code = 0;
         }
         return new ResponseMessage<>(code, resultMsg);
     }
@@ -163,21 +163,21 @@ public class ShoppingcartController {
      * @return
      */
     @PostMapping("modifyStatus")
-    public Object modifyStatus(@RequestBody List<AddCartReq> cartReqs, String loginId, Integer linkBuy) {
+    public Object modifyStatus(@RequestBody List<ShoppingCartReq> cartReqs, String loginId, Integer linkBuy) {
         if (null == linkBuy) {
-            return new ResponseMessage<>(0, "linkBuy为空");
+            return new ResponseMessage<>(1, "linkBuy为空");
         }
         if (null == cartReqs) {
-            return new ResponseMessage<>(0, "商品为空");
+            return new ResponseMessage<>(1, "商品为空");
         }
         if (cartReqs.size() <= 0) {
-            return new ResponseMessage<>(0, "商品为空");
+            return new ResponseMessage<>(1, "商品为空");
         }
         ShoppingCartBaseInfo info = new ShoppingCartBaseInfo();
         info.setLinkBuy(linkBuy);
         info.setLoginId(loginId);
         Map<String, Integer> map = new HashMap<>(cartReqs.size());
-        for (AddCartReq req : cartReqs) {
+        for (ShoppingCartReq req : cartReqs) {
             final String rowId = req.getRowId();
             final Integer status = req.getStatus();
             if (StringUtils.isNoneBlank(rowId) && status != null) {
@@ -187,9 +187,9 @@ public class ShoppingcartController {
         ShoppingCartResultVo resultVo = shoppingcartService.modifyProductBuyStatus(map, info);
         final boolean successFlag = resultVo.getSuccessFlag();
         final String resultMsg = resultVo.getResultMsg();
-        int code = 0;
+        int code = 1;
         if (successFlag) {
-            code = 1;
+            code = 0;
         }
         return new ResponseMessage<>(code, resultMsg);
     }
