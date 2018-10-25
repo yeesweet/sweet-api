@@ -1,4 +1,4 @@
-package com.sweet.api.entity;
+package com.sweet.api.entity.req;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date 2018/10/25.
  */
 @Data
-public class SettlementParam implements Serializable {
+public class SettlementParamReq implements Serializable {
 
     private String commodityNo;
     private Integer count;
