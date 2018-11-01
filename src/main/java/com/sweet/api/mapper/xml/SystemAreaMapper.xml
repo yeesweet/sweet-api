@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sweet.api.mapper.SystemAreaMapper" >
+  <resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.SystemArea" >
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="no" property="no"/>
+    <result column="isleaf" property="isleaf"/>
+    <result column="child" property="child"/>
+    <result column="level" property="level"/>
+    <result column="sort" property="sort"/>
+    <result column="post" property="post"/>
+    <result column="code" property="code"/>
+    <result column="timestamp" property="timestamp"/>
+    <result column="is_usable" property="isUsable"/>
+    <result column="is_cash_on_delivy" property="isCashOnDelivy"/>
+    <result column="but_the_service_area" property="butTheServiceArea"/>
+    <result column="not_service_area" property="notServiceArea"/>
+    <result column="is_cash_on_delivy_mobile" property="isCashOnDelivyMobile"/>
+    <result column="is_support_invoice" property="isSupportInvoice"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, no, isleaf, child,level, sort, post,code, timestamp,
+    is_usable, is_cash_on_delivy,but_the_service_area,not_service_area
+    is_cash_on_delivy_mobile, is_support_invoice
+  </sql>
+  <select id="getSystemAreaList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_system_area
+    where is_usable=1
+    <if test="no != '' and no != null">
+      and instr(no, '${no}')>0
+    </if>
+    <if test="level != null">
+      and level = #{level}
+    </if>
+    order by sort
+  </select>
+
+  <select id="getSystemAreaNameByNo" resultType="String">
+    select name from tbl_system_area
+    where is_usable=1 and no=#{no}
+  </select>
+</mapper>
