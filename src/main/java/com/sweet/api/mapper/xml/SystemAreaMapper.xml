@@ -42,4 +42,12 @@
     select name from tbl_system_area
     where is_usable=1 and no=#{no}
   </select>
+
+  <select id="getSystemAreaByNoList" resultMap="BaseResultMap" parameterType="list">
+    select no,name from tbl_system_area
+    where is_usable=1 and no in
+    <foreach collection="list" index="index" item="no" open="(" separator="," close=")">
+      #{no}
+    </foreach>
+  </select>
 </mapper>

@@ -11,18 +11,20 @@
     <result column="district" property="district"  />
     <result column="address" property="address"  />
     <result column="default_address" property="defaultAddress"  />
+    <result column="zip_code" property="zipCode"  />
     <result column="deleted" property="deleted"  />
     <result column="create_time" property="createTime"  />
     <result column="update_time" property="updateTime"  />
   </resultMap>
   <sql id="Base_Column_List" >
     id , user_id ,name , phone , province , city , district ,
-    address, default_address , deleted , create_time , update_time
+    address, default_address ,zip_code, deleted , create_time , update_time
   </sql>
-  <select id="selectUserAddressList" resultMap="BaseResultMap" parameterType="com.sweet.api.entity.bean.UserAddress" >
+  <select id="selectUserAddressList" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from tbl_user_address
+    where deleted = 0 and user_id = #{userId}
     order by default_address desc,update_time desc
   </select>
   <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -31,70 +33,56 @@
     from tbl_user_address
     where id = #{id}
   </select>
-  <delete id="deleteById" parameterType="java.lang.String" >
-    delete from tbl_user_address
-    where id = #{id}
-  </delete>
+  <update id="updateAddressByIdAndUserId">
+    update tbl_user_address set deleted=1
+    where id = #{id} and user_id = #{userId}
+  </update>
   <insert id="insert" parameterType="com.sweet.api.entity.bean.UserAddress" >
-    insert into tbl_(id, user_id, name, 
-      phone, province_no, province, 
-      city_no, city, district_no, 
-      district, address, default_address, 
-      deleted, create_time, update_time
-      )
-    values (#{id}, #{userId}, #{name}, 
-      #{phone}, #{provinceNo}, #{province}, 
-      #{cityNo}, #{city}, #{districtNo}, 
-      #{district}, #{address}, #{defaultAddress}, 
-      #{deleted}, #{createTime}, #{updateTime}
-      )
+    insert into tbl_user_address(id, user_id, name, phone, province, city, district, address, default_address, zip_code,
+      deleted, create_time, update_time)
+    values (#{id}, #{userId}, #{name}, #{phone}, #{province},  #{city},#{district}, #{address}, #{defaultAddress}, #{zipCode},
+      0, now(), now())
   </insert>
   <update id="updateById" parameterType="com.sweet.api.entity.bean.UserAddress" >
     update tbl_user_address
     <set >
-      <if test="userId != null" >
+      <if test="userId != null and userId != ''" >
         user_id = #{userId},
       </if>
-      <if test="name != null" >
+      <if test="name != null and name != ''" >
         name = #{name},
       </if>
-      <if test="phone != null" >
+      <if test="phone != null and phone != ''" >
         phone = #{phone},
       </if>
-      <if test="provinceNo != null" >
-        province_no = #{provinceNo},
-      </if>
-      <if test="province != null" >
+      <if test="province != null and province != ''" >
         province = #{province},
       </if>
-      <if test="cityNo != null" >
-        city_no = #{cityNo},
-      </if>
-      <if test="city != null" >
+      <if test="city != null and city != ''" >
         city = #{city},
       </if>
-      <if test="districtNo != null" >
-        district_no = #{districtNo},
-      </if>
-      <if test="district != null" >
+      <if test="district != null and district != ''" >
         district = #{district},
       </if>
-      <if test="address != null" >
+      <if test="address != null and address != ''" >
         address = #{address},
       </if>
       <if test="defaultAddress != null" >
         default_address = #{defaultAddress},
       </if>
+      <if test="zipCode != null and zipCode != ''" >
+        zip_code = #{zipCode},
+      </if>
       <if test="deleted != null" >
         deleted = #{deleted},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime},
-      </if>
+      update_time = now()
     </set>
     where id = #{id}
+  </update>
+
+  <update id="updateDefaultAddressByUserId">
+    update tbl_user_address set default_address=#{defaultAddress}
+    where user_id = #{userId}
   </update>
 </mapper>

@@ -25,7 +25,9 @@ public class UserAddress {
     //收货详细地址
     private String address;
     //0 非默认地址 1 默认地址
-    private Byte defaultAddress;
+    private Integer defaultAddress;
+    //邮政编码
+    private String zipCode;
     //0 未删除 1 删除
     private Integer deleted;
 

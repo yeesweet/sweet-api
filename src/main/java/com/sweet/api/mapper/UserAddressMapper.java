@@ -7,14 +7,15 @@ import java.util.List;
 
 public interface UserAddressMapper {
 
-    public List<UserAddress> selectUserAddressList(UserAddress userAddress);
+    public List<UserAddress> selectUserAddressList(String userId);
 
     public UserAddress selectById(@Param("id") String id);
 
-    public void deleteById(@Param("id") String id);
-
+    public void updateAddressByIdAndUserId(@Param("id") String id,@Param("userId")String userId);
     public void insert(UserAddress userAddress);
 
     public void updateById(UserAddress userAddress);
+
+    public void updateDefaultAddressByUserId(@Param("defaultAddress") Integer defaultAddress,@Param("userId")String userId);
 
 }

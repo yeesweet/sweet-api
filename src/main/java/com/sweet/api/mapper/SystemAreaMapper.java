@@ -11,4 +11,6 @@ public interface SystemAreaMapper {
 
     public String getSystemAreaNameByNo(String no);
 
+    public List<SystemArea> getSystemAreaByNoList(List<String> noList);
+
 }

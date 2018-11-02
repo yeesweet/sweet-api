@@ -7,14 +7,16 @@ import java.util.List;
 
 public interface IUserAddressService {
 
-    public List<UserAddress> selectUserAddressList(UserAddress userAddress);
+    public List<UserAddress> selectUserAddressList(String userId);
 
-    public UserAddress selectById(@Param("id") String id);
+    public UserAddress selectById(String id);
 
-    public void deleteById(@Param("id") String id);
+    public void updateAddressByIdAndUserId(String id,String userId);
 
     public void insert(UserAddress userAddress);
 
     public void updateById(UserAddress userAddress);
+
+    public void updateDefaultAddressByUserId(Integer defaultAddress,String userId);
 
 }

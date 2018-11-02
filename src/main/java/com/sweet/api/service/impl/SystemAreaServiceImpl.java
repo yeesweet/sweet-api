@@ -9,7 +9,9 @@ import com.sweet.api.service.IUserAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -28,5 +30,18 @@ public class SystemAreaServiceImpl implements ISystemAreaService {
     @Override
     public String getSystemAreaNameByNo(String no) {
         return systemAreaMapper.getSystemAreaNameByNo(no);
+    }
+
+    @Override
+    public Map<String,String> getNameMapByNoList(List<String> noList) {
+        List<SystemArea> systemAreaList = systemAreaMapper.getSystemAreaByNoList(noList);
+        Map<String,String> noMap = new HashMap<>();
+        if(systemAreaList != null && systemAreaList.size()>0){
+            for(int i=0;i<systemAreaList.size();i++){
+                SystemArea systemArea = systemAreaList.get(i);
+                noMap.put(systemArea.getNo(),systemArea.getName());
+            }
+        }
+        return noMap;
     }
 }

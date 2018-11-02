@@ -18,8 +18,8 @@ public class UserAddressServiceImpl implements IUserAddressService {
     private UserAddressMapper userAddressMapper;
 
     @Override
-    public List<UserAddress> selectUserAddressList(UserAddress userAddress) {
-        return userAddressMapper.selectUserAddressList(userAddress);
+    public List<UserAddress> selectUserAddressList(String userId) {
+        return userAddressMapper.selectUserAddressList(userId);
     }
 
     @Override
@@ -28,8 +28,8 @@ public class UserAddressServiceImpl implements IUserAddressService {
     }
 
     @Override
-    public void deleteById(String id) {
-        userAddressMapper.deleteById(id);
+    public void updateAddressByIdAndUserId(String id,String userId) {
+        userAddressMapper.updateAddressByIdAndUserId(id,userId);
     }
 
     @Override
@@ -40,5 +40,10 @@ public class UserAddressServiceImpl implements IUserAddressService {
     @Override
     public void updateById(UserAddress userAddress) {
         userAddressMapper.updateById(userAddress);
+    }
+
+    @Override
+    public void updateDefaultAddressByUserId(Integer defaultAddress, String userId) {
+        userAddressMapper.updateDefaultAddressByUserId(defaultAddress,userId);
     }
 }
