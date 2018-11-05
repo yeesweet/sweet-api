@@ -25,7 +25,7 @@ public interface IUserAddressService {
      * 查询默认地址
      * @return
      */
-    public UserAddress selectDefaultAddress();
+    public UserAddress selectDefaultAddress(String userId);
 
     /**
      * 根据id和userId修改地址
