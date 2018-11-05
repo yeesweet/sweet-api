@@ -28,6 +28,11 @@ public class UserAddressServiceImpl implements IUserAddressService {
     }
 
     @Override
+    public UserAddress selectDefaultAddress() {
+        return userAddressMapper.selectDefaultAddress();
+    }
+
+    @Override
     public void updateAddressByIdAndUserId(String id,String userId) {
         userAddressMapper.updateAddressByIdAndUserId(id,userId);
     }

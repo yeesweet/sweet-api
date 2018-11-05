@@ -11,6 +11,8 @@ public interface UserAddressMapper {
 
     public UserAddress selectById(@Param("id") String id);
 
+    public UserAddress selectDefaultAddress();
+
     public void updateAddressByIdAndUserId(@Param("id") String id,@Param("userId")String userId);
     public void insert(UserAddress userAddress);
 

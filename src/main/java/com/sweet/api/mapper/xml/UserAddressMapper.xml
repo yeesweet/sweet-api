@@ -31,7 +31,13 @@
     select 
     <include refid="Base_Column_List" />
     from tbl_user_address
-    where id = #{id}
+    where deleted = 0 and id = #{id}
+  </select>
+  <select id="selectDefaultAddress" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_user_address
+    where deleted = 0 and default_address = 1 limit 1
   </select>
   <update id="updateAddressByIdAndUserId">
     update tbl_user_address set deleted=1
