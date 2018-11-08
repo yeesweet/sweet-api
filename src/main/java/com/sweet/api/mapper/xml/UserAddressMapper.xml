@@ -6,8 +6,11 @@
     <result column="user_id" property="userId"  />
     <result column="name" property="name"  />
     <result column="phone" property="phone"  />
+    <result column="province_name" property="provinceName"  />
     <result column="province" property="province"  />
+    <result column="city_name" property="cityName"  />
     <result column="city" property="city"  />
+    <result column="district_name" property="districtName"  />
     <result column="district" property="district"  />
     <result column="address" property="address"  />
     <result column="default_address" property="defaultAddress"  />
@@ -17,7 +20,7 @@
     <result column="update_time" property="updateTime"  />
   </resultMap>
   <sql id="Base_Column_List" >
-    id , user_id ,name , phone , province , city , district ,
+    id , user_id ,name , phone ,province_name, province ,city_name, city ,district_name, district ,
     address, default_address ,zip_code, deleted , create_time , update_time
   </sql>
   <select id="selectUserAddressList" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -52,9 +55,9 @@
     where id = #{id} and user_id = #{userId}
   </update>
   <insert id="insert" parameterType="com.sweet.api.entity.bean.UserAddress" >
-    insert into tbl_user_address(id, user_id, name, phone, province, city, district, address, default_address, zip_code,
+    insert into tbl_user_address(id, user_id, name, phone, province_name, province ,city_name, city ,district_name, district, address, default_address, zip_code,
       deleted, create_time, update_time)
-    values (#{id}, #{userId}, #{name}, #{phone}, #{province},  #{city},#{district}, #{address}, #{defaultAddress}, #{zipCode},
+    values (#{id}, #{userId}, #{name}, #{phone},#{provinceName}, #{province},#{cityName}, #{city},#{districtName},#{district}, #{address}, #{defaultAddress}, #{zipCode},
       0, now(), now())
   </insert>
   <update id="updateById" parameterType="com.sweet.api.entity.bean.UserAddress" >
@@ -69,11 +72,20 @@
       <if test="phone != null and phone != ''" >
         phone = #{phone},
       </if>
+      <if test="provinceName != null and provinceName != ''" >
+        province_name = #{provinceName},
+      </if>
       <if test="province != null and province != ''" >
         province = #{province},
       </if>
+      <if test="cityName != null and cityName != ''" >
+        city_name = #{cityName},
+      </if>
       <if test="city != null and city != ''" >
         city = #{city},
+      </if>
+      <if test="districtName != null and districtName != ''" >
+        district_name = #{districtName},
       </if>
       <if test="district != null and district != ''" >
         district = #{district},

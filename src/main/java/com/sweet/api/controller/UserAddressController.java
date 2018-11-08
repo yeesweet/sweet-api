@@ -55,28 +55,28 @@ public class UserAddressController {
 		String userId = "1";
 		List<UserAddress> userAddressList = userAddressService.selectUserAddressList(userId);
 		List<UserAddressResp> userAddressRespList = new ArrayList<>();
-		List<String> noList = new ArrayList<>();
+//		List<String> noList = new ArrayList<>();
 		if (userAddressList != null && userAddressList.size() > 0) {
 			for (int i = 0; i < userAddressList.size(); i++) {
 				UserAddress userAddress = userAddressList.get(i);
 				UserAddressResp userAddressResp = new UserAddressResp();
 				BeanUtils.copyProperties(userAddress, userAddressResp);
 				userAddressRespList.add(userAddressResp);
-				noList.add(userAddress.getProvince());
-				noList.add(userAddress.getCity());
-				noList.add(userAddress.getDistrict());
+//				noList.add(userAddress.getProvince());
+//				noList.add(userAddress.getCity());
+//				noList.add(userAddress.getDistrict());
 			}
-			if (noList != null && noList.size() > 0) {
-				Map<String, String> noMap = systemAreaService.getNameMapByNoList(noList);
-				if (noMap != null && noMap.size() > 0) {
-					for (int i = 0; i < userAddressRespList.size(); i++) {
-						UserAddressResp userAddressResp = userAddressRespList.get(i);
-						userAddressResp.setProvinceName(noMap.get(userAddressResp.getProvince()));
-						userAddressResp.setCityName(noMap.get(userAddressResp.getCity()));
-						userAddressResp.setDistrictName(noMap.get(userAddressResp.getDistrict()));
-					}
-				}
-			}
+//			if (noList != null && noList.size() > 0) {
+//				Map<String, String> noMap = systemAreaService.getNameMapByNoList(noList);
+//				if (noMap != null && noMap.size() > 0) {
+//					for (int i = 0; i < userAddressRespList.size(); i++) {
+//						UserAddressResp userAddressResp = userAddressRespList.get(i);
+//						userAddressResp.setProvinceName(noMap.get(userAddressResp.getProvince()));
+//						userAddressResp.setCityName(noMap.get(userAddressResp.getCity()));
+//						userAddressResp.setDistrictName(noMap.get(userAddressResp.getDistrict()));
+//					}
+//				}
+//			}
 		}
 		return new ResponseMessage(userAddressRespList);
 	}
@@ -161,11 +161,20 @@ public class UserAddressController {
 			if (null == vo.getProvince()) {
 				return new ResponseMessage(-1, "请选择您所在省份");
 			}
+			if (null == vo.getProvinceName()) {
+				return new ResponseMessage(-1, "请选择您所在省份名称");
+			}
 			if (null == vo.getCity()) {
 				return new ResponseMessage(-1, "请选择您所在城市");
 			}
+			if (null == vo.getCityName()) {
+				return new ResponseMessage(-1, "请选择您所在城市名称");
+			}
 			if (null == vo.getDistrict()) {
 				return new ResponseMessage(-1, "请选择您所在区县");
+			}
+			if (null == vo.getDistrictName()) {
+				return new ResponseMessage(-1, "请选择您所在区县名称");
 			}
 			if (StringUtils.isBlank(vo.getAddress())) {
 				return new ResponseMessage(-1, "您输入收货人地址有误，5-120个字符");
@@ -222,18 +231,18 @@ public class UserAddressController {
 		UserAddressResp userAddressResp = new UserAddressResp();
 		if(userAddress != null){
 			BeanUtils.copyProperties(userAddress,userAddressResp);
-			List<String> noList = new ArrayList<>();
-			noList.add(userAddress.getProvince());
-			noList.add(userAddress.getCity());
-			noList.add(userAddress.getDistrict());
-			if (noList != null && noList.size() > 0) {
-				Map<String, String> noMap = systemAreaService.getNameMapByNoList(noList);
-				if (noMap != null && noMap.size() > 0) {
-					userAddressResp.setProvinceName(noMap.get(userAddressResp.getProvince()));
-					userAddressResp.setCityName(noMap.get(userAddressResp.getCity()));
-					userAddressResp.setDistrictName(noMap.get(userAddressResp.getDistrict()));
-				}
-			}
+//			List<String> noList = new ArrayList<>();
+//			noList.add(userAddress.getProvince());
+//			noList.add(userAddress.getCity());
+//			noList.add(userAddress.getDistrict());
+//			if (noList != null && noList.size() > 0) {
+//				Map<String, String> noMap = systemAreaService.getNameMapByNoList(noList);
+//				if (noMap != null && noMap.size() > 0) {
+//					userAddressResp.setProvinceName(noMap.get(userAddressResp.getProvince()));
+//					userAddressResp.setCityName(noMap.get(userAddressResp.getCity()));
+//					userAddressResp.setDistrictName(noMap.get(userAddressResp.getDistrict()));
+//				}
+//			}
 			userAddressResp.setProvinceList(setArea("root",1));
 			userAddressResp.setCityList(setArea(userAddressResp.getProvince(),2));
 			userAddressResp.setDistrictList(setArea(userAddressResp.getCity(),3));
