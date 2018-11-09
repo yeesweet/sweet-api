@@ -56,3 +56,8 @@ mybatis-plus:
 logging:
   config: classpath:log4j2.xml
   level.com.sweet.api.mapper: debug
+
+wx:
+  login:
+    appId: wxe5b141d276f17ce9
+    appSecret: 65b400045254475aee5e3a1451346072
