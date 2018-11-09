@@ -380,6 +380,7 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
             if (ShoppingCartConstant.BUY_STATUS_CHECKED == isChecked) {
                 buyNum += num;
             }
+            // todo 校验商品是否有效
             for (CommodityVo commodity : commodityList) {
                 final String no = commodity.getCommodityNo();
                 if (StringUtils.equals(commodityNo, no)) {
@@ -434,6 +435,7 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
             if (totalAmount > ShoppingCartConstant.POSTAGE_FREE_AMOUNT) {
                 preferentialAmount += ShoppingCartConstant.SHOPPING_CART_POSTAGE;
             } else {
+                shoppingCartVo.setFreightAmount(ShoppingCartConstant.SHOPPING_CART_POSTAGE);
                 totalAmount += ShoppingCartConstant.SHOPPING_CART_POSTAGE;
             }
         }

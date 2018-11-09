@@ -34,7 +34,10 @@ public class ShoppingCartVo implements Serializable {
      * 是否符合满额免运费活动 1 满足 0  不满足
      */
     private int isPostageFree;
-
+    /**
+     * 实付运费金额
+     */
+    private double freightAmount = 0;
     /**
      * 再购买**元商品，即可免运费
      */

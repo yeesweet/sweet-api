@@ -1,5 +1,6 @@
 package com.sweet.api.entity.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
 public class UserAddress {
     private String id;
     //用户id
+    @JsonIgnore
     private String userId;
     //收货人姓名
     private String name;
@@ -35,10 +37,13 @@ public class UserAddress {
     //邮政编码
     private String zipCode;
     //0 未删除 1 删除
+    @JsonIgnore
     private Integer deleted;
 
+    @JsonIgnore
     private Date createTime;
 
+    @JsonIgnore
     private Date updateTime;
 
 }

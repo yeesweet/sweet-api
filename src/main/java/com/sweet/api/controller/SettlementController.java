@@ -4,12 +4,14 @@ import com.sweet.api.commons.BeanUtils;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
+import com.sweet.api.entity.bean.UserAddress;
 import com.sweet.api.entity.req.SettlementParamReq;
 import com.sweet.api.entity.res.SettlementResp;
 import com.sweet.api.entity.vo.CommodityColumnVo;
 import com.sweet.api.entity.vo.ShoppingCartResultVo;
 import com.sweet.api.entity.vo.ShoppingCartVo;
 import com.sweet.api.service.IShoppingcartService;
+import com.sweet.api.service.IUserAddressService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,9 @@ public class SettlementController {
 
     @Autowired
     private IShoppingcartService shoppingcartService;
+
+    @Autowired
+    private IUserAddressService userAddressService;
 
     @RequestMapping("checkout")
     public Object settlement(SettlementParamReq param) {
@@ -86,7 +91,7 @@ public class SettlementController {
             //正常购买结算
             ShoppingCartVo shoppingCartVo = shoppingcartService.checkAndCalculate(info, true);
             if (shoppingCartVo == null) {
-                return new ResponseMessage<>(1, "结算失败");
+                return new ResponseMessage<>(1, "购物车没有商品，去逛逛！");
             }
             SettlementResp resp = BeanUtils.copy(shoppingCartVo, SettlementResp.class);
             //筛选出购买的商品
@@ -99,7 +104,9 @@ public class SettlementController {
                 }
             }
             resp.setBuyCommodities(buyCommoidtis);
-            //TODO: 2018/10/25 获取用户的默认收货地址
+            //获取用户的默认收货地址
+            UserAddress defaultAddress = userAddressService.selectDefaultAddress(loginId);
+            resp.setDefaultAddress(defaultAddress);
             return new ResponseMessage<>(0, "success", resp);
         } catch (Exception e) {
             logger.error("结算出错：",e);

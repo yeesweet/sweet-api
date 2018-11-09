@@ -1,5 +1,6 @@
 package com.sweet.api.entity.res;
 
+import com.sweet.api.entity.bean.UserAddress;
 import com.sweet.api.entity.vo.CommodityColumnVo;
 import lombok.Data;
 
@@ -35,7 +36,10 @@ public class SettlementResp implements Serializable{
      * 是否符合满额免运费活动 1 满足 0  不满足
      */
     private int isPostageFree;
-
+    /**
+     * 实付运费金额
+     */
+    private double freightAmount = 0;
     /**
      * 再购买**元商品，即可免运费
      */
@@ -55,6 +59,10 @@ public class SettlementResp implements Serializable{
      * 购物车购买商品
      */
     private List<CommodityColumnVo> buyCommodities;
+    /**
+     * 默认收货地址
+     */
+    private UserAddress defaultAddress;
 
     /**
      * 立即购买  1：正常加入购物车，0：立即购买
