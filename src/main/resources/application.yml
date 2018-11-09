@@ -22,6 +22,7 @@ spring:
   redis:
     host: 47.95.213.244
     port: 6301
+    password: sweet1234
 
 #mybatis
 mybatis-plus:
