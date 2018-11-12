@@ -1,5 +1,6 @@
 package com.sweet.api.controller;
 
+import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.entity.req.LoginReq;
 import com.sweet.api.entity.res.LoginResp;
 import com.sweet.api.service.ILoginService;
@@ -25,9 +26,12 @@ public class LoginController {
    * @throws IOException
    */
   @PostMapping("/login")
-  public LoginResp loginMiniprogram(@RequestBody LoginReq loginReq){
+  public ResponseMessage login(@RequestBody LoginReq loginReq) throws IOException {
     LoginResp loginResp = loginService.login(loginReq.getCode());
-    return loginResp;
+    if(loginResp == null){
+      return new ResponseMessage(-1,"登录异常");
+    }
+    return new ResponseMessage(loginResp);
   }
 
 }

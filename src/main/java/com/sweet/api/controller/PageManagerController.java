@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ import java.util.*;
  * 页面管理接口
  * @author wang.s
  */
-@Controller
+@RestController
 @RequestMapping("")
 @Slf4j
 public class PageManagerController{
@@ -42,7 +43,6 @@ public class PageManagerController{
 	 * @param type
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping("/getPageManager")
 	public ResponseMessage getPageManager(Long pageManagerId, Integer type) {
 		if(type == null){

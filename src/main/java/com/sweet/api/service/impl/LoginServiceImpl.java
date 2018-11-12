@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -54,18 +55,14 @@ public class LoginServiceImpl  implements ILoginService {
     private StringRedisTemplate stringRedisTemplate;
 
     @Override
-    public LoginResp login(String code) {
-        WxMessage wxMessage = null;
-        try {
-//            wxMessage = wechatCommon.miniProgramLogin(code,appId,appSecret);
+    public LoginResp login(String code) throws IOException {
+//        WxMessage wxMessage = wechatCommon.miniProgramLogin(code,appId,appSecret);
 
-            wxMessage = new WxMessage();
-            wxMessage.setOpenid("test");
-            wxMessage.setUnionid("test");
-        } catch (Exception e) {
-            logger.error("登录调取微信接口错误："+ e);
-        }
-        if(wxMessage != null){
+        WxMessage wxMessage = new WxMessage();
+        wxMessage.setOpenid("test");
+        wxMessage.setUnionid("test");
+
+        if(wxMessage != null && wxMessage.getOpenid() != null){
             return setSessionUserInfo(wxMessage);
         }
         return null;

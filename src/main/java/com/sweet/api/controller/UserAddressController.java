@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
  * 地址管理接口
  * @author wang.s
  */
-@Controller
+@RestController
 @RequestMapping("userAddress")
 @Slf4j
 public class UserAddressController {
@@ -49,35 +50,18 @@ public class UserAddressController {
 	 * @param
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping("/getUserAddressList")
 	@WechatAccess
 	public ResponseMessage getUserAddressList(SessionUserInfo sessionUserInfo) {
-		String userId = "1";
-		List<UserAddress> userAddressList = userAddressService.selectUserAddressList(userId);
+		List<UserAddress> userAddressList = userAddressService.selectUserAddressList(sessionUserInfo.getUserId());
 		List<UserAddressResp> userAddressRespList = new ArrayList<>();
-//		List<String> noList = new ArrayList<>();
 		if (userAddressList != null && userAddressList.size() > 0) {
 			for (int i = 0; i < userAddressList.size(); i++) {
 				UserAddress userAddress = userAddressList.get(i);
 				UserAddressResp userAddressResp = new UserAddressResp();
 				BeanUtils.copyProperties(userAddress, userAddressResp);
 				userAddressRespList.add(userAddressResp);
-//				noList.add(userAddress.getProvince());
-//				noList.add(userAddress.getCity());
-//				noList.add(userAddress.getDistrict());
 			}
-//			if (noList != null && noList.size() > 0) {
-//				Map<String, String> noMap = systemAreaService.getNameMapByNoList(noList);
-//				if (noMap != null && noMap.size() > 0) {
-//					for (int i = 0; i < userAddressRespList.size(); i++) {
-//						UserAddressResp userAddressResp = userAddressRespList.get(i);
-//						userAddressResp.setProvinceName(noMap.get(userAddressResp.getProvince()));
-//						userAddressResp.setCityName(noMap.get(userAddressResp.getCity()));
-//						userAddressResp.setDistrictName(noMap.get(userAddressResp.getDistrict()));
-//					}
-//				}
-//			}
 		}
 		return new ResponseMessage(userAddressRespList);
 	}
@@ -89,8 +73,8 @@ public class UserAddressController {
 	 * @param level
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping("/getArea")
+	@WechatAccess
 	public ResponseMessage getArea(String parentNo, Integer level) {
 		if (level == null) {
 			return new ResponseMessage(-1, "获取省市区级别不能为空");
@@ -120,9 +104,9 @@ public class UserAddressController {
 	 * @return
 	 */
 	@PostMapping(value = "saveAddress")
-	@ResponseBody
-	public ResponseMessage saveAddress(UserAddressReq vo) {
-		String userId = "1";
+	@WechatAccess
+	public ResponseMessage saveAddress(UserAddressReq vo,SessionUserInfo sessionUserInfo) {
+		String userId = sessionUserInfo.getUserId();
 
 		if (StringUtils.isNotBlank(vo.getName()) && (vo.getName().length() > 100)) {
 			return new ResponseMessage(-1, "收货人姓名长度不能大于100.");
@@ -225,25 +209,13 @@ public class UserAddressController {
 	 * @param id
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping("/toEditAddress")
+	@WechatAccess
 	public ResponseMessage toEditAddress(String id) {
 		UserAddress userAddress = userAddressService.selectById(id);
 		UserAddressResp userAddressResp = new UserAddressResp();
 		if(userAddress != null){
 			BeanUtils.copyProperties(userAddress,userAddressResp);
-//			List<String> noList = new ArrayList<>();
-//			noList.add(userAddress.getProvince());
-//			noList.add(userAddress.getCity());
-//			noList.add(userAddress.getDistrict());
-//			if (noList != null && noList.size() > 0) {
-//				Map<String, String> noMap = systemAreaService.getNameMapByNoList(noList);
-//				if (noMap != null && noMap.size() > 0) {
-//					userAddressResp.setProvinceName(noMap.get(userAddressResp.getProvince()));
-//					userAddressResp.setCityName(noMap.get(userAddressResp.getCity()));
-//					userAddressResp.setDistrictName(noMap.get(userAddressResp.getDistrict()));
-//				}
-//			}
 			userAddressResp.setProvinceList(setArea("root",1));
 			userAddressResp.setCityList(setArea(userAddressResp.getProvince(),2));
 			userAddressResp.setDistrictList(setArea(userAddressResp.getCity(),3));
@@ -276,10 +248,10 @@ public class UserAddressController {
 	 * @param id
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping("/deleteAddress")
-	public ResponseMessage deleteAddress(String id) {
-		String userId="1";
+	@WechatAccess
+	public ResponseMessage deleteAddress(String id,SessionUserInfo sessionUserInfo) {
+		String userId=sessionUserInfo.getUserId();
 		userAddressService.updateAddressByIdAndUserId(id,userId);
 		return new ResponseMessage();
 	}
@@ -290,10 +262,10 @@ public class UserAddressController {
 	 * @param id
 	 * @return
 	 */
-	@ResponseBody
 	@RequestMapping("/updateDefaultAddress")
-	public ResponseMessage updateDefaultAddress(String id) {
-		String userId="1";
+	@WechatAccess
+	public ResponseMessage updateDefaultAddress(String id,SessionUserInfo sessionUserInfo) {
+		String userId=sessionUserInfo.getUserId();
 		userAddressService.updateDefaultAddressByUserId(0,userId);
 		UserAddress userAddress = new UserAddress();
 		userAddress.setId(id);
