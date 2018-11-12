@@ -29,7 +29,7 @@ public class LoginController {
    * @return
    * @throws IOException
    */
-  @PostMapping("/login")
+  @PostMapping(value="login")
   public ResponseMessage login(@RequestBody LoginReq loginReq) throws IOException {
     LoginResp loginResp = loginService.login(loginReq.getCode());
     if(loginResp == null){
