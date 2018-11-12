@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("login")
+@RequestMapping("")
 @Slf4j
 public class LoginController {
 
@@ -27,8 +27,8 @@ public class LoginController {
    * @return
    * @throws IOException
    */
-  @PostMapping(value="wechatLogin")
-  public ResponseMessage wechatLogin(@RequestBody LoginReq loginReq) throws IOException {
+  @PostMapping(value="login")
+  public ResponseMessage login(@RequestBody LoginReq loginReq) throws IOException {
     LoginResp loginResp = loginService.login(loginReq.getCode());
     if(loginResp == null){
       return new ResponseMessage(-1,"登录异常");
