@@ -377,10 +377,6 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
             final String commodityNo = cart.getCommodityNo();
             final Integer num = cart.getNum();
             final Integer isChecked = cart.getIsChecked();
-            if (ShoppingCartConstant.BUY_STATUS_CHECKED == isChecked) {
-                buyNum += num;
-            }
-            // todo 校验商品是否有效
             for (CommodityVo commodity : commodityList) {
                 final String no = commodity.getCommodityNo();
                 if (StringUtils.equals(commodityNo, no)) {
@@ -405,7 +401,7 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
                     if (null != prop) {
                         commodityColumnVo.setPropName(prop.getPropName());
                     }
-                    commodityColumnVo.setNum(cart.getNum());
+                    commodityColumnVo.setNum(num);
                     Integer status = commodity.getCommodityStatus();
                     if (commodity.getStock() <= 0) {
                         status = 7;
@@ -417,8 +413,13 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
                     vos.add(commodityColumnVo);
                     //计算金额
                     if (ShoppingCartConstant.BUY_STATUS_CHECKED == isChecked) {
-                        totalAmount += commodity.getSalePrice();
-                        preferentialAmount += commodity.getMarketPrice() - commodity.getSalePrice();
+                        if (status == 2) {
+                            buyNum += num;
+                            totalAmount += commodity.getSalePrice() * num;
+                        } else {
+                            cart.setIsChecked(ShoppingCartConstant.BUY_STATUS_UNCHECKED);
+                            commodityColumnVo.setBuyStatus(ShoppingCartConstant.BUY_STATUS_UNCHECKED);
+                        }
                     }
                     break;
                 }
@@ -442,14 +443,14 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
         shoppingCartVo.setSaleAmount(totalAmount);
         shoppingCartVo.setPreferentialAmount(preferentialAmount);
         shoppingCartVo.setBuyAmount(totalAmount);
+        shoppingCartVo.setBuyNum(buyNum);
+        shoppingCartVo.setCommodityColumnVoList(vos);
         shoppingCartVo.setOrderAmountLimit(ShoppingCartConstant.LEAST_ORDER_AMOUNT_LIMIT);
         if (totalAmount > ShoppingCartConstant.LEAST_ORDER_AMOUNT_LIMIT) {
             shoppingCartVo.setLackOrderAmount(0);
         } else {
             shoppingCartVo.setLackOrderAmount(ShoppingCartConstant.LEAST_ORDER_AMOUNT_LIMIT - totalAmount);
         }
-        shoppingCartVo.setBuyNum(buyNum);
-        shoppingCartVo.setCommodityColumnVoList(vos);
         return shoppingCartVo;
     }
 
