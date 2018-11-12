@@ -1,9 +1,11 @@
 package com.sweet.api.controller;
 
+import com.sweet.api.annotation.WechatAccess;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.entity.bean.SystemArea;
 import com.sweet.api.entity.bean.UserAddress;
 import com.sweet.api.entity.req.UserAddressReq;
+import com.sweet.api.entity.res.SessionUserInfo;
 import com.sweet.api.entity.res.SystemAreaResp;
 import com.sweet.api.entity.res.UserAddressResp;
 import com.sweet.api.service.ISystemAreaService;
@@ -51,7 +53,8 @@ public class UserAddressController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getUserAddressList")
-	public ResponseMessage getUserAddressList() {
+//	@WechatAccess
+	public ResponseMessage getUserAddressList(SessionUserInfo sessionUserInfo) {
 		String userId = "1";
 		List<UserAddress> userAddressList = userAddressService.selectUserAddressList(userId);
 		List<UserAddressResp> userAddressRespList = new ArrayList<>();
