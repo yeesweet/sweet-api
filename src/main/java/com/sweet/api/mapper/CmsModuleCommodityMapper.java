@@ -2,7 +2,7 @@ package com.sweet.api.mapper;
 
 
 
-import com.sweet.api.entity.bean.CmsModuleCommodity;
+import com.sweet.api.entity.CmsModuleCommodity;
 
 import java.util.List;
 

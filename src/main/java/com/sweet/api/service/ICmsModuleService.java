@@ -1,6 +1,6 @@
 package com.sweet.api.service;
 
-import com.sweet.api.entity.bean.CmsModule;
+import com.sweet.api.entity.CmsModule;
 
 import java.util.List;
 

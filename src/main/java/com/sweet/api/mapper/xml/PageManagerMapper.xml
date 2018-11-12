@@ -3,7 +3,7 @@
 <mapper namespace="com.sweet.api.mapper.PageManagerMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.PageManager">
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.PageManager">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<result column="top_name" property="topName" />
@@ -41,7 +41,7 @@
 	</sql>
 
 	<!-- 根据条件查询活动页列表 -->
-	<select id="getPageManagerList" resultMap="BaseResultMap" parameterType="com.sweet.api.entity.bean.PageManager">
+	<select id="getPageManagerList" resultMap="BaseResultMap" parameterType="com.sweet.api.entity.PageManager">
 		select
 		<include refid="Base_Column_List" />
 		from tbl_cms_page_manager where 1=1

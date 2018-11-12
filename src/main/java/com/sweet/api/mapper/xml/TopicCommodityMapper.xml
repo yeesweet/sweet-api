@@ -3,7 +3,7 @@
 <mapper namespace="com.sweet.api.mapper.TopicCommodityMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.TopicCommodity">
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.TopicCommodity">
 		<id column="id" property="id" />
 		<result column="topic_id" property="topicId" />
 		<result column="commodity_no" property="commodityNo" />
@@ -27,7 +27,7 @@
 		select <include refid="Base_Column_List"/> from tbl_cms_topic_commodity where topic_id = #{topicId} order by sort_no,create_time
 	</select>
 
-	<select id="getCommodityList" parameterType="com.sweet.api.entity.bean.TopicCommodity" resultMap="BaseResultMap">
+	<select id="getCommodityList" parameterType="com.sweet.api.entity.TopicCommodity" resultMap="BaseResultMap">
 		select <include refid="Base_Column_List"/> from tbl_cms_topic_commodity where 1=1
 		<if test="commodityNo != null and commodityNo != ''">
 			and commodity_no = #{commodityNo}

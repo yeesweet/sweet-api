@@ -1,6 +1,6 @@
 package com.sweet.api.mapper;
 
-import com.sweet.api.entity.bean.CategoryCommodity;
+import com.sweet.api.entity.CategoryCommodity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

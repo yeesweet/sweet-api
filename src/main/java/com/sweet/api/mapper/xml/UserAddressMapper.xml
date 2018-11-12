@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sweet.api.mapper.UserAddressMapper" >
-  <resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.UserAddress" >
+  <resultMap id="BaseResultMap" type="com.sweet.api.entity.UserAddress" >
     <id column="id" property="id"  />
     <result column="user_id" property="userId"  />
     <result column="name" property="name"  />
@@ -54,13 +54,13 @@
     update tbl_user_address set deleted=1
     where id = #{id} and user_id = #{userId}
   </update>
-  <insert id="insert" parameterType="com.sweet.api.entity.bean.UserAddress" >
+  <insert id="insert" parameterType="com.sweet.api.entity.UserAddress" >
     insert into tbl_user_address(id, user_id, name, phone, province_name, province ,city_name, city ,district_name, district, address, default_address, zip_code,
       deleted, create_time, update_time)
     values (#{id}, #{userId}, #{name}, #{phone},#{provinceName}, #{province},#{cityName}, #{city},#{districtName},#{district}, #{address}, #{defaultAddress}, #{zipCode},
       0, now(), now())
   </insert>
-  <update id="updateById" parameterType="com.sweet.api.entity.bean.UserAddress" >
+  <update id="updateById" parameterType="com.sweet.api.entity.UserAddress" >
     update tbl_user_address
     <set >
       <if test="userId != null and userId != ''" >

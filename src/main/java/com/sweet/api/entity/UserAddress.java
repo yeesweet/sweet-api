@@ -1,4 +1,4 @@
-package com.sweet.api.entity.bean;
+package com.sweet.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

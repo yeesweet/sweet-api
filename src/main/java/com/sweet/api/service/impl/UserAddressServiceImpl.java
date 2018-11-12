@@ -1,6 +1,6 @@
 package com.sweet.api.service.impl;
 
-import com.sweet.api.entity.bean.UserAddress;
+import com.sweet.api.entity.UserAddress;
 import com.sweet.api.mapper.UserAddressMapper;
 import com.sweet.api.service.IUserAddressService;
 import org.springframework.beans.factory.annotation.Autowired;

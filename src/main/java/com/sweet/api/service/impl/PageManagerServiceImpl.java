@@ -1,6 +1,6 @@
 package com.sweet.api.service.impl;
 
-import com.sweet.api.entity.bean.PageManager;
+import com.sweet.api.entity.PageManager;
 import com.sweet.api.mapper.PageManagerMapper;
 import com.sweet.api.service.IPageManagerService;
 import org.springframework.beans.factory.annotation.Autowired;

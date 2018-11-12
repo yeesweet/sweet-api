@@ -1,7 +1,7 @@
 package com.sweet.api.service;
 
 
-import com.sweet.api.entity.bean.PageManager;
+import com.sweet.api.entity.PageManager;
 
 import java.util.List;
 

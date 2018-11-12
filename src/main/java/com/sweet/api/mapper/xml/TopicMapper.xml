@@ -3,7 +3,7 @@
 <mapper namespace="com.sweet.api.mapper.TopicMapper">
 
 	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.Topic">
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.Topic">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
 		<result column="title" property="title" />

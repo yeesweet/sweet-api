@@ -2,7 +2,7 @@ package com.sweet.api.service.impl;
 
 import com.sweet.api.commons.Query;
 import com.sweet.api.constants.PageManagerConstant;
-import com.sweet.api.entity.bean.*;
+import com.sweet.api.entity.*;
 import com.sweet.api.entity.vo.CommodityVo;
 import com.sweet.api.mapper.CmsModuleCommodityMapper;
 import com.sweet.api.mapper.CmsModuleDetailsMapper;
@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 @Service

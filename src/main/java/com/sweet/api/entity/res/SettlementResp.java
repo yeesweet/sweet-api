@@ -1,6 +1,6 @@
 package com.sweet.api.entity.res;
 
-import com.sweet.api.entity.bean.UserAddress;
+import com.sweet.api.entity.UserAddress;
 import com.sweet.api.entity.vo.CommodityColumnVo;
 import lombok.Data;
 

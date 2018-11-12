@@ -4,7 +4,7 @@ import com.sweet.api.commons.BeanUtils;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
-import com.sweet.api.entity.bean.UserAddress;
+import com.sweet.api.entity.UserAddress;
 import com.sweet.api.entity.req.SettlementParamReq;
 import com.sweet.api.entity.res.SettlementResp;
 import com.sweet.api.entity.vo.CommodityColumnVo;

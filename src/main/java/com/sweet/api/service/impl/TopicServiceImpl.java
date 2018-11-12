@@ -1,6 +1,6 @@
 package com.sweet.api.service.impl;
 
-import com.sweet.api.entity.bean.Topic;
+import com.sweet.api.entity.Topic;
 import com.sweet.api.mapper.TopicMapper;
 import com.sweet.api.service.ITopicService;
 import org.springframework.beans.factory.annotation.Autowired;

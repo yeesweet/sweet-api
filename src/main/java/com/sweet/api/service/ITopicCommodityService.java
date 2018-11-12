@@ -1,7 +1,7 @@
 package com.sweet.api.service;
 
 import com.sweet.api.commons.Query;
-import com.sweet.api.entity.bean.TopicCommodity;
+import com.sweet.api.entity.TopicCommodity;
 
 import java.util.List;
 

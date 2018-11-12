@@ -1,6 +1,6 @@
 package com.sweet.api.service;
 
-import com.sweet.api.entity.bean.CategoryCommodity;
+import com.sweet.api.entity.CategoryCommodity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

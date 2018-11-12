@@ -1,6 +1,6 @@
 package com.sweet.api.service.impl;
 
-import com.sweet.api.entity.bean.CmsModuleCommodity;
+import com.sweet.api.entity.CmsModuleCommodity;
 import com.sweet.api.mapper.CmsModuleCommodityMapper;
 import com.sweet.api.service.ICmsModuleCommodityService;
 import org.springframework.stereotype.Service;

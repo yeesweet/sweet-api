@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sweet.api.mapper.CmsModuleMapper">
-	<resultMap id="BaseResultMap" type="com.sweet.api.entity.bean.CmsModule">
+	<resultMap id="BaseResultMap" type="com.sweet.api.entity.CmsModule">
 		<result column="id" property="id"/>
 		<result column="module_name" property="moduleName"/>
 		<result column="module_style" property="moduleStyle"/>
@@ -25,7 +25,7 @@
 		<result column="bg" property="bg" />
 	</resultMap>
 	
-	<resultMap id="CmsModuleDetailsMapper" type="com.sweet.api.entity.bean.CmsModule">
+	<resultMap id="CmsModuleDetailsMapper" type="com.sweet.api.entity.CmsModule">
 		<result column="id" property="id"/>
 		<result column="module_name" property="moduleName"/>
 		<result column="module_style" property="moduleStyle"/>
@@ -47,7 +47,7 @@
 		<result column="cols" property="cols"/>
 		<result column="type_bg" property="typeBg" />
 		<result column="bg" property="bg" />
-		<collection property="moduleDetails" ofType="com.sweet.api.entity.bean.CmsModuleDetails" column="module_id">
+		<collection property="moduleDetails" ofType="com.sweet.api.entity.CmsModuleDetails" column="module_id">
 			<result column="detail_id" property="detailId"/>
 			<result column="title" property="title"/>
 			<result column="subtitle" property="subTitle"/>
@@ -150,7 +150,7 @@
 	</sql>
 	
 	<!-- 根据条件查询模块列表 -->
-	<select id="queryCmsModuleList" parameterType="com.sweet.api.entity.bean.CmsModule" resultMap="CmsModuleDetailsMapper">
+	<select id="queryCmsModuleList" parameterType="com.sweet.api.entity.CmsModule" resultMap="CmsModuleDetailsMapper">
 		select <include refid="Module_And_Details_List"/> 
 		from tbl_cms_module m
 		left join tbl_cms_module_details d on m.id = d.module_id
@@ -172,7 +172,7 @@
 	</select>
 
 	<!-- 查询模块列表详情(为app和touch提供接口) -->
-	<select id="queryCmsModuleDetailsForClient" parameterType="com.sweet.api.entity.bean.CmsModule" resultMap="CmsModuleDetailsMapper">
+	<select id="queryCmsModuleDetailsForClient" parameterType="com.sweet.api.entity.CmsModule" resultMap="CmsModuleDetailsMapper">
 		select <include refid="Module_And_Details_List"/> 
 		from tbl_cms_module m
 		left join tbl_cms_module_details d on m.id = d.module_id

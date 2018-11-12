@@ -1,9 +1,9 @@
 package com.sweet.api.controller;
 
 import com.sweet.api.commons.ResponseMessage;
-import com.sweet.api.entity.bean.CmsModule;
-import com.sweet.api.entity.bean.CmsModuleDetails;
-import com.sweet.api.entity.bean.PageManager;
+import com.sweet.api.entity.CmsModule;
+import com.sweet.api.entity.CmsModuleDetails;
+import com.sweet.api.entity.PageManager;
 import com.sweet.api.entity.res.CmsModuleDetailsResp;
 import com.sweet.api.entity.res.CmsModuleResp;
 import com.sweet.api.entity.res.PageManagerResp;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

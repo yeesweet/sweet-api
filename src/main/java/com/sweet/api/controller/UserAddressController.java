@@ -2,8 +2,8 @@ package com.sweet.api.controller;
 
 import com.sweet.api.annotation.WechatAccess;
 import com.sweet.api.commons.ResponseMessage;
-import com.sweet.api.entity.bean.SystemArea;
-import com.sweet.api.entity.bean.UserAddress;
+import com.sweet.api.entity.SystemArea;
+import com.sweet.api.entity.UserAddress;
 import com.sweet.api.entity.req.UserAddressReq;
 import com.sweet.api.entity.res.SessionUserInfo;
 import com.sweet.api.entity.res.SystemAreaResp;
@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -53,7 +51,7 @@ public class UserAddressController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getUserAddressList")
-//	@WechatAccess
+	@WechatAccess
 	public ResponseMessage getUserAddressList(SessionUserInfo sessionUserInfo) {
 		String userId = "1";
 		List<UserAddress> userAddressList = userAddressService.selectUserAddressList(userId);

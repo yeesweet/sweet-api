@@ -1,6 +1,6 @@
 package com.sweet.api.mapper;
 
-import com.sweet.api.entity.bean.PageManager;
+import com.sweet.api.entity.PageManager;
 
 import java.util.List;
 

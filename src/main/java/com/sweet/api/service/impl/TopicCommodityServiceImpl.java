@@ -1,7 +1,7 @@
 package com.sweet.api.service.impl;
 
 import com.sweet.api.commons.Query;
-import com.sweet.api.entity.bean.TopicCommodity;
+import com.sweet.api.entity.TopicCommodity;
 import com.sweet.api.mapper.TopicCommodityMapper;
 import com.sweet.api.service.ITopicCommodityService;
 import org.apache.ibatis.session.RowBounds;

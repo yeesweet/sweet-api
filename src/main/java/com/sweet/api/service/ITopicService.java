@@ -1,7 +1,7 @@
 package com.sweet.api.service;
 
 
-import com.sweet.api.entity.bean.Topic;
+import com.sweet.api.entity.Topic;
 
 import java.util.List;
 

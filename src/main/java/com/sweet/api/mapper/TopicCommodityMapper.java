@@ -1,6 +1,6 @@
 package com.sweet.api.mapper;
 
-import com.sweet.api.entity.bean.TopicCommodity;
+import com.sweet.api.entity.TopicCommodity;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 

@@ -1,4 +1,4 @@
-package com.sweet.api.entity.bean;
+package com.sweet.api.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;

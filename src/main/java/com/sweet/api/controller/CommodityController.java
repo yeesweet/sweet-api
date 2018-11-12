@@ -2,8 +2,8 @@ package com.sweet.api.controller;
 
 
 import com.sweet.api.commons.ResponseMessage;
-import com.sweet.api.entity.bean.CategoryCommodity;
-import com.sweet.api.entity.bean.TopicCommodity;
+import com.sweet.api.entity.CategoryCommodity;
+import com.sweet.api.entity.TopicCommodity;
 import com.sweet.api.entity.req.CommodityListReq;
 import com.sweet.api.entity.res.CommodityListResp;
 import com.sweet.api.entity.res.CommodityResp;

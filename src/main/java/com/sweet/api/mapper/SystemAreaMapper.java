@@ -1,6 +1,6 @@
 package com.sweet.api.mapper;
 
-import com.sweet.api.entity.bean.SystemArea;
+import com.sweet.api.entity.SystemArea;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

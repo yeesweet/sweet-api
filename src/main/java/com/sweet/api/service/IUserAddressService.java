@@ -1,7 +1,6 @@
 package com.sweet.api.service;
 
-import com.sweet.api.entity.bean.UserAddress;
-import org.apache.ibatis.annotations.Param;
+import com.sweet.api.entity.UserAddress;
 
 import java.util.List;
 
