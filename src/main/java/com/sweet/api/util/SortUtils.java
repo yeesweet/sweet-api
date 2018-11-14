@@ -1,4 +1,4 @@
-package com.sweet.api.commons;
+package com.sweet.api.util;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.lang.reflect.Field;

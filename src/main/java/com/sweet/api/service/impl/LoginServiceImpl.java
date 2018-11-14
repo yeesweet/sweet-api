@@ -39,10 +39,10 @@ public class LoginServiceImpl  implements ILoginService {
     private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
 
-    @Value("${wx.login.appId}")
+    @Value("${wx.appId}")
     private String appId;
 
-    @Value("${wx.login.appSecret}")
+    @Value("${wx.appSecret}")
     private String appSecret;
 
     @Autowired

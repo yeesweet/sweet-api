@@ -16,4 +16,9 @@ public interface MessageConst {
    * 不允许访问接口异常编码
    */
   int CODE_NOT_ALLOWED_ERROR = 1004;
+
+  int CODE_ERROR = 20002;
+
+  String ERROR = "对不起，请稍后再试";
+
 }

@@ -148,6 +148,14 @@ public enum HttpUtil {
     return execute(httpGet);
   }
 
+  public  String postXML(String url, String xml) throws IOException {
+    HttpPost httpPost = new HttpPost(url);
+    StringEntity postEntity = new StringEntity(xml, "UTF-8");
+    httpPost.addHeader("Content-Type", "text/xml");
+    httpPost.setEntity(postEntity);
+    return execute(httpPost);
+  }
+
   private String execute(HttpRequestBase request) throws IOException {
     long start = System.currentTimeMillis();
     return client.execute(request, new ResponseHandler<String>() {

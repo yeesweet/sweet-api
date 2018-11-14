@@ -58,6 +58,12 @@ logging:
   level.com.sweet.api.mapper: debug
 
 wx:
-  login:
-    appId: wxe5b141d276f17ce9
-    appSecret: 65b400045254475aee5e3a1451346072
+  appId: wxe5b141d276f17ce9
+  appSecret: 65b400045254475aee5e3a1451346072
+  mchId: 1505664481
+  pay:
+    notifyurl:
+    url: https://api.mch.weixin.qq.com/pay/unifiedorder
+  refund:
+    notifyurl:
+    url: https://api.mch.weixin.qq.com/pay/unifiedorder
