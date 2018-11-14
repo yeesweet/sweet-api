@@ -56,11 +56,11 @@ public class LoginServiceImpl  implements ILoginService {
 
     @Override
     public LoginResp login(String code) throws IOException {
-//        WxMessage wxMessage = wechatCommon.miniProgramLogin(code,appId,appSecret);
+        WxMessage wxMessage = wechatCommon.miniProgramLogin(code,appId,appSecret);
 
-        WxMessage wxMessage = new WxMessage();
-        wxMessage.setOpenid("test");
-        wxMessage.setUnionid("test");
+//        WxMessage wxMessage = new WxMessage();
+//        wxMessage.setOpenid("test");
+//        wxMessage.setUnionid("test");
 
         if(wxMessage != null && wxMessage.getOpenid() != null){
             return setSessionUserInfo(wxMessage);
