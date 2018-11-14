@@ -3,9 +3,9 @@ package com.sweet.api.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sweet.api.commons.BeanUtils;
-import com.sweet.api.commons.Md5Encrypt;
-import com.sweet.api.commons.SortUtils;
+import com.sweet.api.util.BeanUtils;
+import com.sweet.api.util.Md5Encrypt;
+import com.sweet.api.util.SortUtils;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.Commodity;
 import com.sweet.api.entity.CommodityProp;
@@ -449,6 +449,7 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
         if (totalAmount > ShoppingCartConstant.LEAST_ORDER_AMOUNT_LIMIT) {
             shoppingCartVo.setLackOrderAmount(0);
         } else {
+            shoppingCartVo.setLimitAllow(false);
             shoppingCartVo.setLackOrderAmount(ShoppingCartConstant.LEAST_ORDER_AMOUNT_LIMIT - totalAmount);
         }
         return shoppingCartVo;

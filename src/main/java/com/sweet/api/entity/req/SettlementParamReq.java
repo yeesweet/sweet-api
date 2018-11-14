@@ -15,5 +15,26 @@ public class SettlementParamReq implements Serializable {
     private Integer count;
     private Integer linkBuy = 1;
     private String loginId;
+    private String orderNo;
+    /**
+     * 配送方式 1 普通快递 2 自提
+     */
+    private Integer deliveryWay = 1;
+    /**
+     * 收货地址
+     */
+    private String addressId;
+    /**
+     * 支付方式 默认 1 微信支付
+     */
+    private Integer payment = 1;
+    /**
+     * 订单备注
+     */
+    private String remark;
+    /**
+     * 渠道  默认 1 小程序
+     */
+    private Integer source = 1;
 
 }

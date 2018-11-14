@@ -1,6 +1,6 @@
 package com.sweet.api.controller;
 
-import com.sweet.api.commons.BeanUtils;
+import com.sweet.api.util.BeanUtils;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.ShoppingCartBaseInfo;

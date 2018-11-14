@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.OrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sweet.api.entity.Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="delivery_status" property="deliveryStatus"/>
+        <result column="prod_total_amt" property="prodTotalAmt"/>
+        <result column="promotion_total_amt" property="promotionTotalAmt"/>
+        <result column="postage_amt" property="postageAmt"/>
+        <result column="prod_total_num" property="prodTotalNum"/>
+        <result column="delivery_way" property="deliveryWay"/>
+        <result column="address_id" property="addressId"/>
+        <result column="payment" property="payment"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="express_name" property="expressName"/>
+        <result column="remark" property="remark"/>
+        <result column="refund_reason" property="refundReason"/>
+        <result column="source" property="source"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="ordersResultMap" type="com.sweet.api.entity.Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="delivery_status" property="deliveryStatus"/>
+        <result column="prod_total_amt" property="prodTotalAmt"/>
+        <result column="promotion_total_amt" property="promotionTotalAmt"/>
+        <result column="postage_amt" property="postageAmt"/>
+        <result column="prod_total_num" property="prodTotalNum"/>
+        <result column="delivery_way" property="deliveryWay"/>
+        <result column="address_id" property="addressId"/>
+        <result column="payment" property="payment"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="express_name" property="expressName"/>
+        <result column="remark" property="remark"/>
+        <result column="refund_reason" property="refundReason"/>
+        <result column="source" property="source"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <collection property="orderDetails" ofType="com.sweet.api.entity.OrderDetail" column="order_no">
+            <result column="did" property="id"/>
+            <result column="dorder_no" property="orderNo"/>
+            <result column="product_total_num" property="productTotalNum"/>
+            <result column="product_total_amt" property="productTotalAmt"/>
+            <result column="product_promotion_total_amt" property="productPromotionTotalAmt"/>
+            <result column="commodity_no" property="commodityNo"/>
+            <result column="sale_price" property="salePrice"/>
+            <result column="mark_price" property="markPrice"/>
+            <result column="commodity_name" property="commodityName"/>
+            <result column="commodity_pic" property="commodityPic"/>
+            <result column="brand_name" property="brandName"/>
+            <result column="prop_no" property="propNo"/>
+            <result column="prop_name" property="propName"/>
+            <result column="item_no" property="itemNo"/>
+            <result column="dcreate_time" property="createTime"/>
+            <result column="dupdate_time" property="updateTime"/>
+            <result column="delete_flag" property="deleteFlag"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="orderWithAddressResultMap" type="com.sweet.api.entity.Order">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="pay_status" property="payStatus"/>
+        <result column="delivery_status" property="deliveryStatus"/>
+        <result column="prod_total_amt" property="prodTotalAmt"/>
+        <result column="promotion_total_amt" property="promotionTotalAmt"/>
+        <result column="postage_amt" property="postageAmt"/>
+        <result column="prod_total_num" property="prodTotalNum"/>
+        <result column="delivery_way" property="deliveryWay"/>
+        <result column="address_id" property="addressId"/>
+        <result column="payment" property="payment"/>
+        <result column="express_no" property="expressNo"/>
+        <result column="express_name" property="expressName"/>
+        <result column="remark" property="remark"/>
+        <result column="refund_reason" property="refundReason"/>
+        <result column="source" property="source"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="address" column="address_id" javaType="com.sweet.api.entity.UserAddress">
+            <id column="aid" property="id"  />
+            <result column="auser_id" property="userId"  />
+            <result column="name" property="name"  />
+            <result column="phone" property="phone"  />
+            <result column="province_name" property="provinceName"  />
+            <result column="province" property="province"  />
+            <result column="city_name" property="cityName"  />
+            <result column="city" property="city"  />
+            <result column="district_name" property="districtName"  />
+            <result column="district" property="district"  />
+            <result column="address" property="address"  />
+            <result column="default_address" property="defaultAddress"  />
+            <result column="zip_code" property="zipCode"  />
+            <result column="deleted" property="deleted"  />
+        </association>
+        <collection property="orderDetails" ofType="com.sweet.api.entity.OrderDetail" column="order_no">
+            <result column="did" property="id"/>
+            <result column="dorder_no" property="orderNo"/>
+            <result column="product_total_num" property="productTotalNum"/>
+            <result column="product_total_amt" property="productTotalAmt"/>
+            <result column="product_promotion_total_amt" property="productPromotionTotalAmt"/>
+            <result column="commodity_no" property="commodityNo"/>
+            <result column="sale_price" property="salePrice"/>
+            <result column="mark_price" property="markPrice"/>
+            <result column="commodity_name" property="commodityName"/>
+            <result column="commodity_pic" property="commodityPic"/>
+            <result column="brand_name" property="brandName"/>
+            <result column="prop_no" property="propNo"/>
+            <result column="prop_name" property="propName"/>
+            <result column="item_no" property="itemNo"/>
+            <result column="dcreate_time" property="createTime"/>
+            <result column="dupdate_time" property="updateTime"/>
+            <result column="delete_flag" property="deleteFlag"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_no, user_id, order_status, pay_status, delivery_status, prod_total_amt, promotion_total_amt, postage_amt, prod_total_num, delivery_way, address_id, payment, express_no, express_name, remark, refund_reason, source, create_time, update_time
+    </sql>
+
+    <select id="getMyOrders" resultMap="ordersResultMap">
+        SELECT
+          o.*,d.id AS did,d.order_no AS dorder_no,d.product_total_num,d.product_total_amt,
+          d.product_promotion_total_amt,d.commodity_no,d.commodity_name,d.commodity_pic,
+          d.brand_name,d.sale_price,d.mark_price,d.prop_no,d.prop_name,d.item_no,d.create_time AS dcreate_time,
+          d.update_time AS dupdate_time,d.delete_flag
+        FROM tbl_order o
+        LEFT JOIN tbl_order_detail d ON o.order_no = d.order_no
+        WHERE d.delete_flag = 1
+        AND o.user_id= #{userId}
+        <choose>
+            <when test="type == 1">
+                AND o.pay_status = 1
+            </when>
+            <when test="type == 2">
+                AND o.pay_status = 2 AND o.delivery_status = 1
+            </when>
+            <when test="type == 3">
+                AND o.pay_status = 2 AND o.delivery_status = 2
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        ORDER BY o.create_time  DESC
+    </select>
+
+    <select id="getOrderDetail" resultMap="orderWithAddressResultMap">
+        SELECT
+          o.*,d.id AS did,d.order_no AS dorder_no,d.product_total_num,d.product_total_amt,
+          d.product_promotion_total_amt,d.commodity_no,d.commodity_name,d.commodity_pic,
+          d.brand_name,d.sale_price,d.mark_price,d.prop_no,d.prop_name,d.item_no,d.create_time AS dcreate_time,
+          d.update_time AS dupdate_time,d.delete_flag,a.id AS aid,a.user_id AS auser_id,a.name,a.phone,a.province_name,
+          a.province,a.city_name,a.city,a.district_name,a.district,a.address,a.default_address,a.zip_code,a.deleted
+        FROM tbl_order o
+        LEFT JOIN tbl_order_detail d ON o.order_no = d.order_no
+        LEFT JOIN tbl_user_address a ON o.address_id = a.id
+        WHERE o.user_id = #{userId}
+              AND o.order_no = #{orderNo}
+              AND d.delete_flag=1
+              AND a.deleted = 0
+    </select>
+</mapper>

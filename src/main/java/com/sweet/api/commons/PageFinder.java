@@ -54,9 +54,13 @@ public class PageFinder<T> implements Serializable {
 	private Map<String,Object> condition;
 	
 	/**
-	 * 起始页
+	 * 起始index
 	 */
-	private Integer startPage;
+	private Integer startIndex;
+	/**
+	 * 结束index
+	 */
+	private Integer endIndex;
 
 	public PageFinder(int pageNo, int rowCount) {
 		this.pageNo = pageNo;
@@ -79,13 +83,13 @@ public class PageFinder<T> implements Serializable {
 	/**
 	 * 
 	 */
-	public PageFinder(int pageNo, int pageSize, int rowCount, List<T> data) {
+	public PageFinder(int pageNo, int pageSize, int rowCount, List<T> srcData) {
 		this.pageNo = pageNo;
 		this.pageSize = pageSize;
 		this.rowCount = rowCount;
 		this.pageCount = getTotalPageCount();
-		this.data = data;
 		refresh();
+		this.data = srcData.subList(this.getStartIndex(),this.getEndIndex());
 	}
 
 	/**
@@ -115,13 +119,18 @@ public class PageFinder<T> implements Serializable {
 			hasPrevious = true;
 			hasNext = true;
 		}
-		//计算起始页
+		//计算起始index
 		if(pageNo<=1)
 		{
-			startPage = 0;
+			startIndex = 0;
 		}else
 		{
-			startPage =pageSize * (pageNo-1);
+			startIndex =pageSize * (pageNo-1);
+		}
+		//计算结束index
+		endIndex = pageNo * pageSize;
+		if (endIndex > rowCount) {
+			endIndex = rowCount;
 		}
 	
 	}
@@ -192,9 +201,6 @@ public class PageFinder<T> implements Serializable {
 		this.pageSize = pageSize;
 	}
 
-	/**
-	 * 获取跳转页第�?��数据在数据集的位�?
-	 */
 	public int getStartOfPage() {
 		return (pageNo - 1) * pageSize;
 	}
@@ -207,12 +213,19 @@ public class PageFinder<T> implements Serializable {
 		this.condition = condition;
 	}
 
-	public Integer getStartPage() {
-		return startPage;
+	public Integer getStartIndex() {
+		return startIndex;
 	}
 
-	public void setStartPage(Integer startPage) {
-		this.startPage = startPage;
+	public void setStartIndex(Integer startIndex) {
+		this.startIndex = startIndex;
 	}
-	
+
+	public Integer getEndIndex() {
+		return endIndex;
+	}
+
+	public void setEndIndex(Integer endIndex) {
+		this.endIndex = endIndex;
+	}
 }

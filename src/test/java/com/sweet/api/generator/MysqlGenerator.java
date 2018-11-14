@@ -64,13 +64,13 @@ public class MysqlGenerator {
 		StrategyConfig strategy = new StrategyConfig();
 		// strategy.setCapitalMode(true);// 全局大写命名
 		// strategy.setDbColumnUnderline(true);//全局下划线命名
-		strategy.setTablePrefix(new String[] {"tbl_cms"});// 此处可以修改为您的表前缀
+		strategy.setTablePrefix(new String[] {"tbl_"});// 此处可以修改为您的表前缀
 		strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-		strategy.setInclude(new String[] { "tbl_cms_commodity_pics" }); // 需要生成的表
+		strategy.setInclude(new String[] { "tbl_order","tbl_order_detail"}); // 需要生成的表
 		strategy.setEntityLombokModel(true);
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 自定义实体父类
-		strategy.setSuperEntityClass("com.sweet.api.commons.SuperEntity");
+		//strategy.setSuperEntityClass("com.sweet.api.commons.SuperEntity");
 		// 自定义实体，公共字段
 		// strategy.setSuperEntityColumns(new String[] { "test_id", "age" });
 		// 自定义 mapper 父类

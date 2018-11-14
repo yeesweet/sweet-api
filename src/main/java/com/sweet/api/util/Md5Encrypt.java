@@ -1,4 +1,4 @@
-package com.sweet.api.commons;
+package com.sweet.api.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

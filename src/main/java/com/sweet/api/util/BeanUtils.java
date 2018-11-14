@@ -1,6 +1,7 @@
-package com.sweet.api.commons;
+package com.sweet.api.util;
 
 
+import com.sweet.api.commons.BeanProperty;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.beans.BeanGenerator;
 import org.springframework.cglib.beans.BeanMap;

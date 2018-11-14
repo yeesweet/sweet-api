@@ -42,7 +42,10 @@ public class ShoppingCartVo implements Serializable {
      * 再购买**元商品，即可免运费
      */
     private double rePurTofreightAmount = 0;
-
+    /**
+     * 满足最小成单额限制
+     */
+    private boolean limitAllow = true;
     /**
      * 最小成单金额
      */
