@@ -140,7 +140,7 @@ public class OrderController {
      * @param user
      * @return
      */
-    @RequestMapping("list")
+    @PostMapping("/list")
     public Object getorders(@RequestParam(defaultValue = "0") Integer type,
                             @RequestParam(defaultValue = "1") Integer currentPage,
                             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -155,14 +155,14 @@ public class OrderController {
         }
         //查询订单列表
         PageFinder<Order> orders = orderService.getMyOrders(userId, type, currentPage, pageSize);
-        if(orders == null || orders.getRowCount() <= 0){
+        if (orders == null || orders.getRowCount() <= 0) {
             return new ResponseMessage<>(1, "无订单信息");
         }
         OrderListResp resp = transformParam(orders);
         return new ResponseMessage<>(0, "success", resp);
     }
 
-    @RequestMapping("detail")
+    @PostMapping("/detail")
     public Object getOrderDetail(String orderNo, SessionUserInfo user) {
         if (null == user) {
             return new ResponseMessage<>(1, "请您先登录");
@@ -177,11 +177,73 @@ public class OrderController {
             return new ResponseMessage<>(1, "订单号为空");
         }
         Order order = orderService.getOrderDetail(userId, orderNo);
-        if(order == null){
-            return new ResponseMessage<>(1, orderNo+"订单号为空");
+        if (order == null) {
+            return new ResponseMessage<>(1, orderNo + "订单号为空");
         }
         OrderResp resp = transformParam(order);
         return new ResponseMessage<>(0, "success", resp);
+    }
+
+    @PostMapping("/cancel")
+    public Object cancelOrder(String orderNo, SessionUserInfo user) {
+        if (null == user) {
+            return new ResponseMessage<>(1, "请您先登录");
+        }
+
+        final String userId = user.getUserId();
+        if (StringUtils.isBlank(userId)) {
+            return new ResponseMessage<>(1, "请您先登录");
+        }
+
+        if (StringUtils.isBlank(orderNo)) {
+            return new ResponseMessage<>(1, "订单号为空");
+        }
+        try {
+            final Order order = orderService.getOrder(userId, orderNo);
+            if (order == null) {
+                return new ResponseMessage<>(1, orderNo + "订单号为空");
+            }
+            boolean success = orderService.cancelOrder(userId, orderNo);
+            if (success) {
+                return new ResponseMessage<>(1, "订单取消成功");
+            } else {
+                return new ResponseMessage<>(1, "取消订单");
+            }
+        } catch (Exception e) {
+            logger.error(orderNo + "订单取消失败：", e);
+            return new ResponseMessage<>(1, "取消订单");
+        }
+    }
+
+    @PostMapping("/recieve")
+    public Object recieve(String orderNo, SessionUserInfo user) {
+        if (null == user) {
+            return new ResponseMessage<>(1, "请您先登录");
+        }
+
+        final String userId = user.getUserId();
+        if (StringUtils.isBlank(userId)) {
+            return new ResponseMessage<>(1, "请您先登录");
+        }
+
+        if (StringUtils.isBlank(orderNo)) {
+            return new ResponseMessage<>(1, "订单号为空");
+        }
+        try {
+            final Order order = orderService.getOrder(userId, orderNo);
+            if (order == null) {
+                return new ResponseMessage<>(1, orderNo + "订单号为空");
+            }
+            boolean success = orderService.checkRecieveGoods(userId, orderNo);
+            if (success) {
+                return new ResponseMessage<>(1, "确认收货成功");
+            } else {
+                return new ResponseMessage<>(1, "确认收货失败");
+            }
+        } catch (Exception e) {
+            logger.error(orderNo + "确认收货失败：", e);
+            return new ResponseMessage<>(1, "确认收货失败");
+        }
     }
 
     private OrderListResp transformParam(PageFinder<Order> orders) {
@@ -189,12 +251,13 @@ public class OrderController {
         resp.setCount(orders.getRowCount());
         List<OrderResp> orderResps = new ArrayList<>(orders.getRowCount());
         List<Order> data = orders.getData();
-        for(Order order : data){
+        for (Order order : data) {
             orderResps.add(transformParam(order));
         }
         resp.setOrders(orderResps);
         return resp;
     }
+
     private OrderResp transformParam(Order order) {
         OrderResp resp = new OrderResp();
         resp.setDeliveryWay(order.getDeliveryWay());
@@ -210,7 +273,7 @@ public class OrderController {
         //详情
         final List<OrderDetail> orderDetails = order.getOrderDetails();
         List<OrderDetailResp> detailResps = new ArrayList<>(orderDetails.size());
-        for(OrderDetail detail : orderDetails){
+        for (OrderDetail detail : orderDetails) {
             OrderDetailResp res = new OrderDetailResp();
             res.setCommodityNo(detail.getCommodityNo());
             res.setCommodityName(detail.getCommodityName());
@@ -226,20 +289,20 @@ public class OrderController {
         final Integer orderStatus = order.getOrderStatus();
         final Integer payStatus = order.getPayStatus();
         final Integer deliveryStatus = order.getDeliveryStatus();
-        if(orderStatus == 1 && payStatus == 1){
+        if (orderStatus == 1 && payStatus == 1) {
             showStatusStr = "等待付款";
             resp.setCancelOrder(true);
             resp.setGoPay(true);
-        } else if(orderStatus == 3){
+        } else if (orderStatus == 3) {
             showStatusStr = "已取消";
             resp.setBuyAgain(true);
-        } else if(orderStatus == 2 && payStatus == 2 && deliveryStatus == 2){
+        } else if (orderStatus == 2 && payStatus == 2 && deliveryStatus == 2) {
             showStatusStr = "已发货";
             resp.setSeeLogistics(true);
             resp.setCheckGoods(true);
-        } else if(orderStatus == 5){
+        } else if (orderStatus == 5) {
             showStatusStr = "已完成";
-        } else if(orderStatus == 2 && payStatus == 2 && deliveryStatus == 1){
+        } else if (orderStatus == 2 && payStatus == 2 && deliveryStatus == 1) {
             showStatusStr = "已付款";
             resp.setCancelOrder(true);
         }

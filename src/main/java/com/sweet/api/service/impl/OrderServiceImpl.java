@@ -1,6 +1,7 @@
 package com.sweet.api.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sweet.api.commons.PageFinder;
 import com.sweet.api.entity.Order;
@@ -58,7 +59,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return null;
         }
         Order order = null;
-        Map<String,Integer> stockMap = null;
+        Map<String, Integer> stockMap = null;
         try {
             order = BeanUtils.copy(orderBaseVo, Order.class);
             String orderNo = orderBaseVo.getOrderNo();
@@ -94,19 +95,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 detail.setDeleteFlag(1);
                 details.add(detail);
 
-                stockMap.put(vo.getCommodityNo(),vo.getNum());
+                stockMap.put(vo.getCommodityNo(), vo.getNum());
             }
             saveOrderInfo(order, details);
         } catch (Exception e) {
             logger.error("保存订单数据出错：", JSON.toJSONString(order));
         }
         //清除购物车  减库存
-        try{
+        try {
             if (order != null) {
                 shoppingcartService.cleanCheckedShoppingcart(orderBaseVo.getUserId());
                 iInventoryService.decreaseStockBatch(stockMap);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("清空购物车或者减库存出错：", JSON.toJSONString(order));
         }
         return order;
@@ -130,9 +131,59 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public Order getOrderDetail(String userId, String orderNo) {
-        Assert.hasText(userId,"userId为空");
-        Assert.hasText(orderNo,"orderNo为空");
-        return orderMapper.getOrderDetail(userId,orderNo);
+        Assert.hasText(userId, "userId为空");
+        Assert.hasText(orderNo, "orderNo为空");
+        return orderMapper.getOrderDetail(userId, orderNo);
+    }
+
+    @Override
+    public Order getOrder(String userId, String orderNo) {
+        Assert.hasText(userId, "userId为空");
+        Assert.hasText(orderNo, "orderNo为空");
+        return selectOne(new QueryWrapper<Order>().eq("user_id", userId).eq("order_no", orderNo));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean cancelOrder(String userId, String orderNo) {
+        Assert.hasText(userId, "userId为空");
+        Assert.hasText(orderNo, "orderNo为空");
+        try {
+            Order order = getOrderDetail(userId, orderNo);
+            if (order != null) {
+                final List<OrderDetail> details = order.getOrderDetails();
+                Map<String,Integer> stockMap = new HashMap<>();
+                for(OrderDetail detail : details){
+                    stockMap.put(detail.getCommodityNo(),detail.getProductTotalNum());
+                }
+                //更新订单状态、释放库存
+                order.setOrderStatus(3);
+                updateById(order);
+                iInventoryService.decreaseStockBatch(stockMap);
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error(orderNo+"订单取消失败",e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkRecieveGoods(String userId, String orderNo) {
+        Assert.hasText(userId, "userId为空");
+        Assert.hasText(orderNo, "orderNo为空");
+        try {
+            Order order = getOrder(userId, orderNo);
+            if (order != null) {
+                order.setOrderStatus(5);
+                order.setDeliveryStatus(3);
+                updateById(order);
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error(orderNo+"订单取消失败",e);
+        }
+        return false;
     }
 
     @Transactional(rollbackFor = Exception.class)

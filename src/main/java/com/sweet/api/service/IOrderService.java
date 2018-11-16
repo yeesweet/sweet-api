@@ -40,4 +40,28 @@ public interface IOrderService extends IService<Order> {
      * @return
      */
     Order getOrderDetail(String userId, String orderNo);
+
+    /**
+     * 查询订单信息 不包含详情、收货人
+     * @param userId
+     * @param orderNo
+     * @return
+     */
+    Order getOrder(String userId, String orderNo);
+
+    /**
+     * 取消订单  同时释放库存
+     * @param userId
+     * @param order
+     * @return
+     */
+    boolean cancelOrder(String userId, String orderNo);
+
+    /**
+     * 确认收货
+     * @param userId
+     * @param orderNo
+     * @return
+     */
+    boolean checkRecieveGoods(String userId, String orderNo);
 }

@@ -143,13 +143,13 @@
         AND o.user_id= #{userId}
         <choose>
             <when test="type == 1">
-                AND o.pay_status = 1
+                AND o.order_status = 1 AND o.pay_status = 1
             </when>
             <when test="type == 2">
-                AND o.pay_status = 2 AND o.delivery_status = 1
+                AND o.order_status = 2 AND o.pay_status = 2 AND o.delivery_status = 1
             </when>
             <when test="type == 3">
-                AND o.pay_status = 2 AND o.delivery_status = 2
+                AND o.order_status = 2 AND o.pay_status = 2 AND o.delivery_status = 2
             </when>
             <otherwise>
             </otherwise>
