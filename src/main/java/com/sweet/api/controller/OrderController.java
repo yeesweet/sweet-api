@@ -195,7 +195,6 @@ public class OrderController {
         resp.setOrders(orderResps);
         return resp;
     }
-    //TODO 订单状态
     private OrderResp transformParam(Order order) {
         OrderResp resp = new OrderResp();
         resp.setDeliveryWay(order.getDeliveryWay());
@@ -222,6 +221,29 @@ public class OrderController {
             detailResps.add(res);
         }
         resp.setDetails(detailResps);
+        //订单显示状态
+        String showStatusStr = "等待付款";
+        final Integer orderStatus = order.getOrderStatus();
+        final Integer payStatus = order.getPayStatus();
+        final Integer deliveryStatus = order.getDeliveryStatus();
+        if(orderStatus == 1 && payStatus == 1){
+            showStatusStr = "等待付款";
+            resp.setCancelOrder(true);
+            resp.setGoPay(true);
+        } else if(orderStatus == 3){
+            showStatusStr = "已取消";
+            resp.setBuyAgain(true);
+        } else if(orderStatus == 2 && payStatus == 2 && deliveryStatus == 2){
+            showStatusStr = "已发货";
+            resp.setSeeLogistics(true);
+            resp.setCheckGoods(true);
+        } else if(orderStatus == 5){
+            showStatusStr = "已完成";
+        } else if(orderStatus == 2 && payStatus == 2 && deliveryStatus == 1){
+            showStatusStr = "已付款";
+            resp.setCancelOrder(true);
+        }
+        resp.setShowStatusStr(showStatusStr);
         return resp;
     }
 
