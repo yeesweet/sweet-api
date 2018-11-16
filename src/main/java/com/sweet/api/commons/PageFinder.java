@@ -6,226 +6,227 @@ import java.util.Map;
 
 /**
  * 分页对象. 包含当前页数据及分页信息
- * 
  */
 @SuppressWarnings("serial")
 public class PageFinder<T> implements Serializable {
 
-	private static int DEFAULT_PAGE_SIZE = 20;
+    private static int DEFAULT_PAGE_SIZE = 20;
 
-	/**
-	 * 每页的记录数
-	 */
-	private int pageSize = DEFAULT_PAGE_SIZE;
+    /**
+     * 每页的记录数
+     */
+    private int pageSize = DEFAULT_PAGE_SIZE;
 
-	/**
-	 * 当前页中存放的数据
-	 */
-	private List<T> data;
+    /**
+     * 当前页中存放的数据
+     */
+    private List<T> data;
 
-	/**
-	 * 总记录数
-	 */
-	private int rowCount;
+    /**
+     * 总记录数
+     */
+    private int rowCount;
 
-	/**
-	 * 页数
-	 */
-	private int pageCount;
+    /**
+     * 页数
+     */
+    private int pageCount;
 
-	/**
-	 * 跳转页数
-	 */
-	private int pageNo;
+    /**
+     * 跳转页数
+     */
+    private int pageNo;
 
-	/**
-	 * 是否有上一页
-	 */
-	private boolean hasPrevious = false;
+    /**
+     * 是否有上一页
+     */
+    private boolean hasPrevious = false;
 
-	/**
-	 * 是否有下一页
-	 */
-	private boolean hasNext = false;
-	
-	/**
-	 * 查询条件
-	 */
-	private Map<String,Object> condition;
-	
-	/**
-	 * 起始index
-	 */
-	private Integer startIndex;
-	/**
-	 * 结束index
-	 */
-	private Integer endIndex;
+    /**
+     * 是否有下一页
+     */
+    private boolean hasNext = false;
 
-	public PageFinder(int pageNo, int rowCount) {
-		this.pageNo = pageNo;
-		this.rowCount = rowCount;
-		this.pageCount = getTotalPageCount();
-		refresh();
-	}
+    /**
+     * 查询条件
+     */
+    private Map<String, Object> condition;
 
-	/**
-	 * 构造方法
-	 */
-	public PageFinder(int pageNo, int pageSize, int rowCount) {
-		this.pageNo = pageNo;
-		this.pageSize = pageSize;
-		this.rowCount = rowCount;
-		this.pageCount = getTotalPageCount();
-		refresh();
-	}
+    /**
+     * 起始index
+     */
+    private Integer startIndex;
+    /**
+     * 结束index
+     */
+    private Integer endIndex;
 
-	/**
-	 * 
-	 */
-	public PageFinder(int pageNo, int pageSize, int rowCount, List<T> srcData) {
-		this.pageNo = pageNo;
-		this.pageSize = pageSize;
-		this.rowCount = rowCount;
-		this.pageCount = getTotalPageCount();
-		refresh();
-		this.data = srcData.subList(this.getStartIndex(),this.getEndIndex());
-	}
+    public PageFinder(int pageNo, int rowCount) {
+        this.pageNo = pageNo;
+        this.rowCount = rowCount;
+        this.pageCount = getTotalPageCount();
+        refresh();
+    }
 
-	/**
-	 * 取总页数
-	 */
-	private final int getTotalPageCount() {
-		if (rowCount % pageSize == 0)
-			return rowCount / pageSize;
-		else
-			return rowCount / pageSize + 1;
-	}
+    /**
+     * 构造方法
+     */
+    public PageFinder(int pageNo, int pageSize, int rowCount) {
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+        this.rowCount = rowCount;
+        this.pageCount = getTotalPageCount();
+        refresh();
+    }
 
-	/**
-	 * 刷新当前分页对象数据
-	 */
-	private void refresh() {
-		if (pageCount <= 1) {
-			hasPrevious = false;
-			hasNext = false;
-		} else if (pageNo == 1) {
-			hasPrevious = false;
-			hasNext = true;
-		} else if (pageNo == pageCount) {
-			hasPrevious = true;
-			hasNext = false;
-		} else {
-			hasPrevious = true;
-			hasNext = true;
-		}
-		//计算起始index
-		if(pageNo<=1)
-		{
-			startIndex = 0;
-		}else
-		{
-			startIndex =pageSize * (pageNo-1);
-		}
-		//计算结束index
-		endIndex = pageNo * pageSize;
-		if (endIndex > rowCount) {
-			endIndex = rowCount;
-		}
-	
-	}
+    /**
+     *
+     */
+    public PageFinder(int pageNo, int pageSize, int rowCount, List<T> srcData) {
+        this.pageNo = pageNo;
+        this.pageSize = pageSize;
+        this.rowCount = rowCount;
+        this.pageCount = getTotalPageCount();
+        refresh();
+        if (srcData != null && srcData.size() > 0) {
+            this.data = srcData.subList(this.getStartIndex(), this.getEndIndex());
+        } else {
+            this.data = srcData;
+        }
+    }
 
-	/**
-	 * 取每页数据数
-	 */
-	public int getPageSize() {
-		return pageSize;
-	}
+    /**
+     * 取总页数
+     */
+    private final int getTotalPageCount() {
+        if (rowCount % pageSize == 0)
+            return rowCount / pageSize;
+        else
+            return rowCount / pageSize + 1;
+    }
 
-	/**
-	 * 取当前页中的记录.
-	 */
-	public Object getResult() {
-		return data;
-	}
+    /**
+     * 刷新当前分页对象数据
+     */
+    private void refresh() {
+        if (pageCount <= 1) {
+            hasPrevious = false;
+            hasNext = false;
+        } else if (pageNo == 1) {
+            hasPrevious = false;
+            hasNext = true;
+        } else if (pageNo == pageCount) {
+            hasPrevious = true;
+            hasNext = false;
+        } else {
+            hasPrevious = true;
+            hasNext = true;
+        }
+        //计算起始index
+        if (pageNo <= 1) {
+            startIndex = 0;
+        } else {
+            startIndex = pageSize * (pageNo - 1);
+        }
+        //计算结束index
+        endIndex = pageNo * pageSize;
+        if (endIndex > rowCount) {
+            endIndex = rowCount;
+        }
 
-	public List<T> getData() {
-		return data;
-	}
+    }
 
-	public void setData(List<T> data) {
-		this.data = data;
-	}
+    /**
+     * 取每页数据数
+     */
+    public int getPageSize() {
+        return pageSize;
+    }
 
-	public int getRowCount() {
-		return rowCount;
-	}
+    /**
+     * 取当前页中的记录.
+     */
+    public Object getResult() {
+        return data;
+    }
 
-	public void setRowCount(int rowCount) {
-		this.rowCount = rowCount;
-	}
+    public List<T> getData() {
+        return data;
+    }
 
-	public int getPageCount() {
-		return pageCount;
-	}
+    public void setData(List<T> data) {
+        this.data = data;
+    }
 
-	public void setPageCount(int pageCount) {
-		this.pageCount = pageCount;
-	}
+    public int getRowCount() {
+        return rowCount;
+    }
 
-	public int getPageNo() {
-		return pageNo;
-	}
+    public void setRowCount(int rowCount) {
+        this.rowCount = rowCount;
+    }
 
-	public void setPageNo(int pageNo) {
-		this.pageNo = pageNo;
-	}
+    public int getPageCount() {
+        return pageCount;
+    }
 
-	public boolean isHasPrevious() {
-		return hasPrevious;
-	}
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
 
-	public void setHasPrevious(boolean hasPrevious) {
-		this.hasPrevious = hasPrevious;
-	}
+    public int getPageNo() {
+        return pageNo;
+    }
 
-	public boolean isHasNext() {
-		return hasNext;
-	}
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
 
-	public void setHasNext(boolean hasNext) {
-		this.hasNext = hasNext;
-	}
+    public boolean isHasPrevious() {
+        return hasPrevious;
+    }
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public void setHasPrevious(boolean hasPrevious) {
+        this.hasPrevious = hasPrevious;
+    }
 
-	public int getStartOfPage() {
-		return (pageNo - 1) * pageSize;
-	}
-	
-	public Map<String, Object> getCondition() {
-		return condition;
-	}
+    public boolean isHasNext() {
+        return hasNext;
+    }
 
-	public void setCondition(Map<String, Object> condition) {
-		this.condition = condition;
-	}
+    public void setHasNext(boolean hasNext) {
+        this.hasNext = hasNext;
+    }
 
-	public Integer getStartIndex() {
-		return startIndex;
-	}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public void setStartIndex(Integer startIndex) {
-		this.startIndex = startIndex;
-	}
+    public int getStartOfPage() {
+        return (pageNo - 1) * pageSize;
+    }
 
-	public Integer getEndIndex() {
-		return endIndex;
-	}
+    public Map<String, Object> getCondition() {
+        return condition;
+    }
 
-	public void setEndIndex(Integer endIndex) {
-		this.endIndex = endIndex;
-	}
+    public void setCondition(Map<String, Object> condition) {
+        this.condition = condition;
+    }
+
+    public Integer getStartIndex() {
+        return startIndex;
+    }
+
+    public void setStartIndex(Integer startIndex) {
+        this.startIndex = startIndex;
+    }
+
+    public Integer getEndIndex() {
+        return endIndex;
+    }
+
+    public void setEndIndex(Integer endIndex) {
+        this.endIndex = endIndex;
+    }
 }

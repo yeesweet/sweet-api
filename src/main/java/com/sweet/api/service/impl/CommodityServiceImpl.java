@@ -168,4 +168,14 @@ public class CommodityServiceImpl extends ServiceImpl<CommodityMapper, Commodity
     public List<CommodityVo> getCommoditySearchList(CommodityListReq commodityListReq) {
         return commodityMapper.getCommoditySearchList(commodityListReq);
     }
+
+    @Override
+    public void increaseStock(String commodityNo, Integer stock) {
+        commodityMapper.increaseStock(commodityNo, stock);
+    }
+
+    @Override
+    public void decreaseStock(String commodityNo, Integer stock) {
+        commodityMapper.decreaseStock(commodityNo, stock);
+    }
 }

@@ -10,7 +10,7 @@ import com.sweet.api.entity.res.SystemAreaResp;
 import com.sweet.api.entity.res.UserAddressResp;
 import com.sweet.api.service.ISystemAreaService;
 import com.sweet.api.service.IUserAddressService;
-import com.sweet.api.util.KeyGenerator;
+import com.sweet.api.util.StringUtil;
 import com.sweet.api.util.ValidateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -196,7 +196,7 @@ public class UserAddressController {
 		}
 		if(!StringUtils.isNotBlank(vo.getId())){
 			userAddress.setDefaultAddress(0);
-			userAddress.setId(KeyGenerator.getUUID());
+			userAddress.setId(StringUtil.getUUID());
 			userAddressService.insert(userAddress);
 		}
 		return new ResponseMessage();

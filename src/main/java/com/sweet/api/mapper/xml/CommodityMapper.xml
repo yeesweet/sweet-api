@@ -132,5 +132,10 @@
             <if test="sortOrder == 4"> sale_price desc </if>
         </if>
     </select>
-
+    <update id="increaseStock">
+        UPDATE tbl_cms_commodity SET stock = stock + #{stock} WHERE commodity_no = #{commodityNo}
+    </update>
+    <update id="decreaseStock">
+        UPDATE tbl_cms_commodity SET stock = stock - #{stock} WHERE commodity_no = #{commodityNo}
+    </update>
 </mapper>

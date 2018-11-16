@@ -8,8 +8,10 @@ import com.sweet.api.entity.OrderDetail;
 import com.sweet.api.entity.vo.CommodityColumnVo;
 import com.sweet.api.entity.vo.OrderBaseVo;
 import com.sweet.api.mapper.OrderMapper;
+import com.sweet.api.service.IInventoryService;
 import com.sweet.api.service.IOrderDetailService;
 import com.sweet.api.service.IOrderService;
+import com.sweet.api.service.IShoppingcartService;
 import com.sweet.api.util.BeanUtils;
 import com.sweet.api.util.RedisCreateOrderNoUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,9 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -46,12 +46,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private IShoppingcartService shoppingcartService;
+
+    @Autowired
+    private IInventoryService iInventoryService;
+
     @Override
     public Order createOrder(OrderBaseVo orderBaseVo) {
         if (orderBaseVo == null) {
             return null;
         }
         Order order = null;
+        Map<String,Integer> stockMap = null;
         try {
             order = BeanUtils.copy(orderBaseVo, Order.class);
             String orderNo = orderBaseVo.getOrderNo();
@@ -67,6 +74,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             //封装订单详情数据
             final List<CommodityColumnVo> products = orderBaseVo.getProducts();
             List<OrderDetail> details = new ArrayList<>(products.size());
+            stockMap = new HashMap<>();
             for (CommodityColumnVo vo : products) {
                 OrderDetail detail = new OrderDetail();
                 detail.setOrderNo(orderNo);
@@ -85,10 +93,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 detail.setUpdateTime(new Date());
                 detail.setDeleteFlag(1);
                 details.add(detail);
+
+                stockMap.put(vo.getCommodityNo(),vo.getNum());
             }
             saveOrderInfo(order, details);
         } catch (Exception e) {
             logger.error("保存订单数据出错：", JSON.toJSONString(order));
+        }
+        //清除购物车  减库存
+        try{
+            if (order != null) {
+                shoppingcartService.cleanCheckedShoppingcart(orderBaseVo.getUserId());
+                iInventoryService.decreaseStockBatch(stockMap);
+            }
+        }catch (Exception e){
+            logger.error("清空购物车或者减库存出错：", JSON.toJSONString(order));
         }
         return order;
     }

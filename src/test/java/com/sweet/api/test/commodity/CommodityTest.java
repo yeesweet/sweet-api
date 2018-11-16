@@ -39,4 +39,10 @@ public class CommodityTest {
         final List<CommodityVo> vos = commodityService.getAllCommodityByItemNo(itemNo);
         Assert.notEmpty(vos,"测试通过");
     }
+
+    @Test
+    public void increaseStockBatch(){
+        commodityService.increaseStock("10002896",1);
+        System.out.println("success");
+    }
 }

@@ -9,7 +9,7 @@ import com.sweet.api.entity.res.SessionUserInfo;
 import com.sweet.api.entity.res.UserInfoSimple;
 import com.sweet.api.service.ILoginService;
 import com.sweet.api.service.IUserInfoService;
-import com.sweet.api.util.KeyGenerator;
+import com.sweet.api.util.StringUtil;
 import com.sweet.api.wx.entity.WxMessage;
 import com.sweet.api.wx.service.WechatCommon;
 import org.bouncycastle.util.encoders.UrlBase64;
@@ -78,7 +78,7 @@ public class LoginServiceImpl  implements ILoginService {
         String userId = "";
         if (userInfo == null) {
             userInfo = new UserInfo();
-            userId = KeyGenerator.getUUID();
+            userId = StringUtil.getUUID();
             userInfo.setId(userId);
             userInfo.setUnionId(wxMessage.getUnionid());
             userInfo.setOpenId(wxMessage.getOpenid());
@@ -100,7 +100,7 @@ public class LoginServiceImpl  implements ILoginService {
         userInfoSimple.setOpenId(userInfo.getOpenId());
         userInfoSimple.setUserId(userId);
         String tokenStr = JSON.toJSONString(userInfoSimple);
-        String tokenRandom = KeyGenerator.getUUID();
+        String tokenRandom = StringUtil.getUUID();
         String prefix = null;
         try {
             prefix = new String(UrlBase64.encode(tokenStr.getBytes("utf-8")));

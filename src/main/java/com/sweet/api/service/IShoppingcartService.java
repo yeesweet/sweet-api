@@ -73,10 +73,9 @@ public interface IShoppingcartService extends IService<ShoppingCart> {
 
     /**
      * 清空购物车
-     *
-     * @param info
+     * @param loginId
      */
-    void clearShoppingCart(ShoppingCartBaseInfo info);
+    void clearShoppingCart(String loginId);
 
     /**
      * 获取购物车数量
@@ -119,4 +118,10 @@ public interface IShoppingcartService extends IService<ShoppingCart> {
      */
 
     ShoppingCartResp getCartListResp(ShoppingCartBaseInfo info);
+
+    /**
+     * 清空已勾选购物车 提交订单后使用
+     * @param logInId
+     */
+    void cleanCheckedShoppingcart(String logInId);
 }

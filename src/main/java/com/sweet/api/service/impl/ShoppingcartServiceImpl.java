@@ -80,9 +80,11 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
                 return resultVo;
             }
             final Integer linkBuy = info.getLinkBuy();
-            //立即购买先清空临时购物车
+            //立即购买先将购物车置为未勾选
             if (ShoppingCartConstant.IS_LINK_BUY == linkBuy) {
-                clearShoppingCart(info);
+                ShoppingCart cart = new ShoppingCart();
+                cart.setIsChecked(0);
+                update(cart, new UpdateWrapper<ShoppingCart>().eq("login_id", loginId));
             }
             //购物车数量校验
             Integer num = getShoppingCartProductNum(info);
@@ -263,14 +265,12 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
     }
 
     @Override
-    public void clearShoppingCart(ShoppingCartBaseInfo info) {
-        Assert.notNull(info, "loginId为空");
-        Assert.hasText(info.getLoginId(), "loginId为空");
-        String spMd5 = info.getLoginId() + "@" + info.getLinkBuy();
+    public void clearShoppingCart(String loginId) {
+        Assert.hasText(loginId, "loginId为空");
         ShoppingCart cart = new ShoppingCart();
         cart.setDelFlag(0);
         cart.setIsChecked(0);
-        update(cart, new UpdateWrapper<ShoppingCart>().eq("sp_md5", spMd5));
+        update(cart, new UpdateWrapper<ShoppingCart>().eq("login_id", loginId));
     }
 
     @Override
@@ -507,5 +507,16 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
             resp.setAbateCommodities(abateCommodities);
         }
         return resp;
+    }
+
+    @Override
+    public void cleanCheckedShoppingcart(String loginId) {
+        Assert.hasText(loginId,"loginId为空");
+        ShoppingCart cart = new ShoppingCart();
+        cart.setDelFlag(0);
+        cart.setIsChecked(0);
+        update(cart, new UpdateWrapper<ShoppingCart>().eq("login_id", loginId)
+                                    .eq("is_checked",1));
+
     }
 }

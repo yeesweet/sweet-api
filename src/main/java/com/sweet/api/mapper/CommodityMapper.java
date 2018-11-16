@@ -27,4 +27,8 @@ public interface CommodityMapper extends SuperMapper<Commodity> {
                                        @Param("instock") boolean instock);
 
     List<CommodityVo> getCommoditySearchList(CommodityListReq commodityListReq);
+
+    void increaseStock(@Param("commodityNo") String commodityNo, @Param("stock") Integer stock);
+
+    void decreaseStock(@Param("commodityNo") String commodityNo, @Param("stock") Integer stock);
 }

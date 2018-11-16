@@ -6,11 +6,15 @@ import com.sweet.api.commons.PageFinder;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.Order;
+import com.sweet.api.entity.OrderDetail;
 import com.sweet.api.entity.ShoppingCartBaseInfo;
 import com.sweet.api.entity.UserAddress;
 import com.sweet.api.entity.pay.PayInfo;
 import com.sweet.api.entity.pay.PayTradeInfo;
 import com.sweet.api.entity.req.SettlementParamReq;
+import com.sweet.api.entity.res.OrderDetailResp;
+import com.sweet.api.entity.res.OrderListResp;
+import com.sweet.api.entity.res.OrderResp;
 import com.sweet.api.entity.res.SessionUserInfo;
 import com.sweet.api.entity.vo.CommodityColumnVo;
 import com.sweet.api.entity.vo.OrderBaseVo;
@@ -151,7 +155,11 @@ public class OrderController {
         }
         //查询订单列表
         PageFinder<Order> orders = orderService.getMyOrders(userId, type, currentPage, pageSize);
-        return null;
+        if(orders == null || orders.getRowCount() <= 0){
+            return new ResponseMessage<>(1, "无订单信息");
+        }
+        OrderListResp resp = transformParam(orders);
+        return new ResponseMessage<>(0, "success", resp);
     }
 
     @RequestMapping("detail")
@@ -169,7 +177,52 @@ public class OrderController {
             return new ResponseMessage<>(1, "订单号为空");
         }
         Order order = orderService.getOrderDetail(userId, orderNo);
-        return null;
+        if(order == null){
+            return new ResponseMessage<>(1, orderNo+"订单号为空");
+        }
+        OrderResp resp = transformParam(order);
+        return new ResponseMessage<>(0, "success", resp);
+    }
+
+    private OrderListResp transformParam(PageFinder<Order> orders) {
+        OrderListResp resp = new OrderListResp();
+        resp.setCount(orders.getRowCount());
+        List<OrderResp> orderResps = new ArrayList<>(orders.getRowCount());
+        List<Order> data = orders.getData();
+        for(Order order : data){
+            orderResps.add(transformParam(order));
+        }
+        resp.setOrders(orderResps);
+        return resp;
+    }
+    //TODO 订单状态
+    private OrderResp transformParam(Order order) {
+        OrderResp resp = new OrderResp();
+        resp.setDeliveryWay(order.getDeliveryWay());
+        resp.setExpressName(order.getExpressName());
+        resp.setExpressNo(order.getExpressNo());
+        resp.setAddress(order.getAddress());
+        resp.setOrderNo(order.getOrderNo());
+        resp.setOrderTime(order.getCreateTime());
+        resp.setPayment(order.getPayment());
+        resp.setTotalAmount(order.getProdTotalAmt());
+        resp.setPromotionTotalAmt(order.getPromotionTotalAmt());
+        resp.setPostageAmt(order.getPostageAmt());
+        //详情
+        final List<OrderDetail> orderDetails = order.getOrderDetails();
+        List<OrderDetailResp> detailResps = new ArrayList<>(orderDetails.size());
+        for(OrderDetail detail : orderDetails){
+            OrderDetailResp res = new OrderDetailResp();
+            res.setCommodityNo(detail.getCommodityNo());
+            res.setCommodityName(detail.getCommodityName());
+            res.setCommodityPic(detail.getCommodityPic());
+            res.setPropName(detail.getPropName());
+            res.setSalePrice(detail.getSalePrice());
+            res.setBuyNum(detail.getProductTotalNum());
+            detailResps.add(res);
+        }
+        resp.setDetails(detailResps);
+        return resp;
     }
 
     /**

@@ -52,5 +52,18 @@ public interface ICommodityService extends IService<Commodity> {
      * @param commodityListReq
      * @return
      */
-    public List<CommodityVo> getCommoditySearchList(CommodityListReq commodityListReq);
+    List<CommodityVo> getCommoditySearchList(CommodityListReq commodityListReq);
+
+    /**
+     * 增加库存
+     * @param commodityNo
+     * @param stock
+     */
+    void increaseStock(String commodityNo, Integer stock);
+
+    /**
+     * 减少库存
+     * @param stockMap
+     */
+    void decreaseStock(String commodityNo, Integer stock);
 }
