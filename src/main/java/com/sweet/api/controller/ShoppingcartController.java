@@ -72,7 +72,7 @@ public class ShoppingcartController {
      * @param orderNo  重新购买
      * @return
      */
-    @PostMapping("add")
+    @PostMapping("/add")
     public Object addCommodityToCart(@RequestBody List<ShoppingCartReq> cartReqs,
                                      @RequestParam(defaultValue = "1") Integer linkBuy,
                                      String orderNo,
@@ -137,7 +137,7 @@ public class ShoppingcartController {
      * @param user
      * @return
      */
-    @PostMapping("remove")
+    @PostMapping("/remove")
     public Object removeFromCart(@RequestBody String[] rowIds, SessionUserInfo user) {
 
         if (null == user) {
@@ -167,7 +167,7 @@ public class ShoppingcartController {
      * @param user
      * @return
      */
-    @PostMapping("editcommodity")
+    @PostMapping("/editcommodity")
     public Object updateFromCart(@RequestBody List<ShoppingCartReq> cartReqs, SessionUserInfo user) {
 
         if (null == user) {
@@ -213,7 +213,7 @@ public class ShoppingcartController {
      * @param user
      * @return
      */
-    @PostMapping("modifyStatus")
+    @PostMapping("/modifyStatus")
     public Object modifyStatus(@RequestBody List<ShoppingCartReq> cartReqs, SessionUserInfo user) {
         user = new SessionUserInfo();
         user.setUserId("4905fa2246454afcab6c47956b133a68");
