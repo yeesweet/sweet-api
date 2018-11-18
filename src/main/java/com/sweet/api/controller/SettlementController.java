@@ -1,5 +1,6 @@
 package com.sweet.api.controller;
 
+import com.sweet.api.entity.res.SessionUserInfo;
 import com.sweet.api.util.BeanUtils;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.constants.ShoppingCartConstant;
@@ -41,16 +42,25 @@ public class SettlementController {
     private IUserAddressService userAddressService;
 
     @RequestMapping("checkout")
-    public Object settlement(SettlementParamReq param) {
+    public Object settlement(SettlementParamReq param, SessionUserInfo user) {
 
-        final Integer linkBuy = param.getLinkBuy();
         //校验是否登录
-        final String loginId = param.getLoginId();
-        if (StringUtils.isBlank(loginId)) {
+        if (null == user) {
             return new ResponseMessage<>(1, "请您先登录");
         }
+
+        final String userId = user.getUserId();
+        if (StringUtils.isBlank(userId)) {
+            return new ResponseMessage<>(1, "请您先登录");
+        }
+
+        final Integer linkBuy = param.getLinkBuy();
+        if (null == linkBuy) {
+            return new ResponseMessage<>(1, "linkBuy为空");
+        }
+
         ShoppingCartBaseInfo info = new ShoppingCartBaseInfo();
-        info.setLoginId(loginId);
+        info.setLoginId(userId);
         info.setLinkBuy(linkBuy);
         try {
             /**
@@ -105,7 +115,7 @@ public class SettlementController {
             }
             resp.setBuyCommodities(buyCommoidtis);
             //获取用户的默认收货地址
-            UserAddress defaultAddress = userAddressService.selectDefaultAddress(loginId);
+            UserAddress defaultAddress = userAddressService.selectDefaultAddress(userId);
             resp.setDefaultAddress(defaultAddress);
             return new ResponseMessage<>(0, "success", resp);
         } catch (Exception e) {

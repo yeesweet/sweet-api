@@ -215,8 +215,6 @@ public class ShoppingcartController {
      */
     @PostMapping("/modifyStatus")
     public Object modifyStatus(@RequestBody List<ShoppingCartReq> cartReqs, SessionUserInfo user) {
-        user = new SessionUserInfo();
-        user.setUserId("4905fa2246454afcab6c47956b133a68");
 
         if (null == user) {
             return new ResponseMessage<>(1, "请您先登录");
