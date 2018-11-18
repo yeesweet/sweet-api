@@ -11,7 +11,7 @@ public class OrderDetailResp {
     private String commodityNo;
     private String commodityName;
     private String commodityPic;
-    private Integer buyNum;
+    private Integer num;
     private double salePrice;
     private String propName;
 }

@@ -27,23 +27,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * <p>
- * 订单表 前端控制器
+ * 订单
  * </p>
  *
  * @author zhang.hp
  * @since 2018-11-12
  */
-@Controller
+@RestController
 @RequestMapping("/order")
 public class OrderController {
 
@@ -87,9 +87,7 @@ public class OrderController {
             info.setLoginId(userId);
             ShoppingCartVo shoppingCartVo = shoppingcartService.checkAndCalculate(info, true);
             if (null == shoppingCartVo) {
-                if (null == user) {
-                    return new ResponseMessage<>(1, "购物车空空如也，先去逛逛！");
-                }
+                return new ResponseMessage<>(1, "购物车空空如也，先去逛逛！");
             }
             //商品校验
             final List<CommodityColumnVo> commodityColumnVoList = shoppingCartVo.getCommodityColumnVoList();
@@ -142,7 +140,7 @@ public class OrderController {
      */
     @PostMapping("/list")
     public Object getorders(@RequestParam(defaultValue = "0") Integer type,
-                            @RequestParam(defaultValue = "1") Integer currentPage,
+                            @RequestParam(defaultValue = "1") Integer pageNo,
                             @RequestParam(defaultValue = "10") Integer pageSize,
                             SessionUserInfo user) {
         if (null == user) {
@@ -154,7 +152,7 @@ public class OrderController {
             return new ResponseMessage<>(1, "请您先登录");
         }
         //查询订单列表
-        PageFinder<Order> orders = orderService.getMyOrders(userId, type, currentPage, pageSize);
+        PageFinder<Order> orders = orderService.getMyOrders(userId, type, pageNo, pageSize);
         if (orders == null || orders.getRowCount() <= 0) {
             return new ResponseMessage<>(1, "无订单信息");
         }
@@ -246,6 +244,16 @@ public class OrderController {
         }
     }
 
+    /**
+     * 去支付
+     * @param orderNo
+     * @param user
+     * @return
+     */
+    @PostMapping("/gopay")
+    public Object gopay(String orderNo, SessionUserInfo user){
+        return null;
+    }
     private OrderListResp transformParam(PageFinder<Order> orders) {
         OrderListResp resp = new OrderListResp();
         resp.setCount(orders.getRowCount());
@@ -270,6 +278,7 @@ public class OrderController {
         resp.setTotalAmount(order.getProdTotalAmt());
         resp.setPromotionTotalAmt(order.getPromotionTotalAmt());
         resp.setPostageAmt(order.getPostageAmt());
+        resp.setBuyNum(order.getProdTotalNum());
         //详情
         final List<OrderDetail> orderDetails = order.getOrderDetails();
         List<OrderDetailResp> detailResps = new ArrayList<>(orderDetails.size());
@@ -280,7 +289,7 @@ public class OrderController {
             res.setCommodityPic(detail.getCommodityPic());
             res.setPropName(detail.getPropName());
             res.setSalePrice(detail.getSalePrice());
-            res.setBuyNum(detail.getProductTotalNum());
+            res.setNum(detail.getProductTotalNum());
             detailResps.add(res);
         }
         resp.setDetails(detailResps);

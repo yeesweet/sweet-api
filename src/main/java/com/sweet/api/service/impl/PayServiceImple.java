@@ -1,17 +1,19 @@
 package com.sweet.api.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sweet.api.constants.MessageConst;
 import com.sweet.api.constants.WXPayConstants;
 import com.sweet.api.entity.Order;
+import com.sweet.api.entity.pay.PayInfo;
 import com.sweet.api.entity.pay.PayTradeInfo;
 import com.sweet.api.entity.pay.UnifiedOrder;
 import com.sweet.api.entity.pay.WechatOrder;
-import com.sweet.api.entity.pay.PayInfo;
 import com.sweet.api.exception.OrderException;
 import com.sweet.api.service.IOrderService;
 import com.sweet.api.service.IPayService;
-import com.sweet.api.util.*;
+import com.sweet.api.util.HttpUtil;
+import com.sweet.api.util.SignUtils;
+import com.sweet.api.util.StringUtil;
+import com.sweet.api.util.WxPayUtil;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +67,7 @@ public class PayServiceImple implements IPayService {
         final Integer payment = payTradeInfo.getPayment();
         final String tradeType = payTradeInfo.getTradeType();
         if (payment == 1) {
-            if(StringUtils.equalsIgnoreCase("pay",tradeType)) {
+            if (StringUtils.equalsIgnoreCase("pay", tradeType)) {
                 payInfo = this.pay4WX(payTradeInfo);
             }
         }
@@ -74,16 +76,17 @@ public class PayServiceImple implements IPayService {
 
     /**
      * 小程序统一下单
+     *
      * @param payTradeInfo
      * @return
      */
     private PayInfo pay4WX(PayTradeInfo payTradeInfo) {
-        PayInfo payInfo=null;
-        Order order = orderService.selectOne(new QueryWrapper<Order>().eq("order_no", payTradeInfo.getOrderNo()));
+        PayInfo payInfo = null;
+        Order order = orderService.getOrder(payTradeInfo.getUser().getUserId(), payTradeInfo.getOrderNo());
         if (order != null) {
             final Integer payStatus = order.getPayStatus();
             //未支付
-            if(payStatus == 1){
+            if (payStatus == 1) {
                 //微信统一下单
                 UnifiedOrder unifiedOrder = new UnifiedOrder();
                 unifiedOrder.setAppid(appId);
@@ -95,7 +98,7 @@ public class PayServiceImple implements IPayService {
                 BigDecimal totalFee = new BigDecimal(payTradeInfo.getAmount());
                 //单位分
                 unifiedOrder.setTotal_fee(totalFee.multiply(new BigDecimal(100)).intValue());
-                String nonceStr= StringUtil.getUUID();
+                String nonceStr = StringUtil.getUUID();
                 unifiedOrder.setNonce_str(nonceStr);
                 unifiedOrder.setBody("十点趣动-订单支付");
                 unifiedOrder.setSpbill_create_ip(WxPayUtil.getRemoteHost());
@@ -127,17 +130,17 @@ public class PayServiceImple implements IPayService {
                 }
                 //二次签名认证
                 String timeStamp = Long.toString(System.currentTimeMillis());
-                SortedMap<String,String> map = new TreeMap<>();
-                map.put("appId",appId);
-                map.put("timeStamp",timeStamp);
-                map.put("nonceStr",nonceStr);
-                map.put("package","prepay_id="+wechatOrder.getPrepay_id());
-                map.put("signType","MD5");
+                SortedMap<String, String> map = new TreeMap<>();
+                map.put("appId", appId);
+                map.put("timeStamp", timeStamp);
+                map.put("nonceStr", nonceStr);
+                map.put("package", "prepay_id=" + wechatOrder.getPrepay_id());
+                map.put("signType", "MD5");
                 String sign = "";
-                try{
-                    sign = SignUtils.sign(map,appSecret);
-                }catch (Exception e){
-                    logger.info("统一下单二次签名报错：{}",e.getMessage());
+                try {
+                    sign = SignUtils.sign(map, appSecret);
+                } catch (Exception e) {
+                    logger.info("统一下单二次签名报错：{}", e.getMessage());
                 }
                 payInfo = new PayInfo();
                 payInfo.setOrderNo(payTradeInfo.getOrderNo());

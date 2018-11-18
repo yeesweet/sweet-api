@@ -1,5 +1,6 @@
 package com.sweet.api.controller;
 
+import com.sweet.api.annotation.WechatAccess;
 import com.sweet.api.entity.res.SessionUserInfo;
 import com.sweet.api.util.BeanUtils;
 import com.sweet.api.commons.ResponseMessage;
@@ -31,6 +32,7 @@ import java.util.Map;
  * @date 2018/10/25.
  */
 @RestController
+@WechatAccess
 public class SettlementController {
 
     private static final Logger logger = LoggerFactory.getLogger(SettlementController.class);
