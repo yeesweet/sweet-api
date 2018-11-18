@@ -17,5 +17,5 @@ public class ShoppingCartBaseInfo implements Serializable {
     /**
      * 立即购买  1：正常加入购物车，0：立即购买
      */
-    private Integer linkBuy;
+    private Integer linkBuy = 1;
 }

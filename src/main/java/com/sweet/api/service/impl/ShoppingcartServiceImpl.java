@@ -3,9 +3,6 @@ package com.sweet.api.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sweet.api.util.BeanUtils;
-import com.sweet.api.util.Md5Encrypt;
-import com.sweet.api.util.SortUtils;
 import com.sweet.api.constants.ShoppingCartConstant;
 import com.sweet.api.entity.Commodity;
 import com.sweet.api.entity.CommodityProp;
@@ -19,6 +16,9 @@ import com.sweet.api.entity.vo.ShoppingCartVo;
 import com.sweet.api.mapper.ShoppingcartMapper;
 import com.sweet.api.service.ICommodityService;
 import com.sweet.api.service.IShoppingcartService;
+import com.sweet.api.util.BeanUtils;
+import com.sweet.api.util.Md5Encrypt;
+import com.sweet.api.util.SortUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,13 +62,13 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
         }
         if (info == null) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         final String loginId = info.getLoginId();
         if (StringUtils.isBlank(loginId)) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         try {
@@ -79,6 +79,21 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
                 resultVo.setResultMsg(commodityNo + "不存在");
                 return resultVo;
             }
+
+            final Integer commodityStatus = commodity.getCommodityStatus();
+            if (commodityStatus != 2) {
+                resultVo.setSuccessFlag(false);
+                resultVo.setResultMsg(commodityNo + "已下架");
+                return resultVo;
+            }
+
+            final Integer stock = commodity.getStock();
+            if (stock <= 0) {
+                resultVo.setSuccessFlag(false);
+                resultVo.setResultMsg(commodityNo + "已售罄");
+                return resultVo;
+            }
+
             final Integer linkBuy = info.getLinkBuy();
             //立即购买先将购物车置为未勾选
             if (ShoppingCartConstant.IS_LINK_BUY == linkBuy) {
@@ -124,6 +139,7 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
                 } else {
                     shoppingCart.setNum(count);
                     shoppingCart.setAddTime(new Date());
+                    shoppingCart.setAddPrice(commodity.getSalePrice());
                     shoppingCart.setDelFlag(1);
                 }
                 shoppingCart.setIsChecked(1);
@@ -172,13 +188,13 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
         ShoppingCartResultVo resultVo = new ShoppingCartResultVo();
         if (info == null) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         final String loginId = info.getLoginId();
         if (StringUtils.isBlank(loginId)) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         if (null == rowIds) {
@@ -233,13 +249,13 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
         }
         if (info == null) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         final String loginId = info.getLoginId();
         if (StringUtils.isBlank(loginId)) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         List<ShoppingCart> carts = new ArrayList<>();
@@ -266,7 +282,7 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
 
     @Override
     public void clearShoppingCart(String loginId) {
-        Assert.hasText(loginId, "loginId为空");
+        Assert.hasText(loginId, "userId为空");
         ShoppingCart cart = new ShoppingCart();
         cart.setDelFlag(0);
         cart.setIsChecked(0);
@@ -275,8 +291,8 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
 
     @Override
     public Integer getShoppingCartProductNum(ShoppingCartBaseInfo info) {
-        Assert.notNull(info, "loginId为空");
-        Assert.hasText(info.getLoginId(), "loginId为空");
+        Assert.notNull(info, "userId为空");
+        Assert.hasText(info.getLoginId(), "userId为空");
         Integer num = shoppingcartMapper.getShoppingCartProductNum(info.getLoginId());
         if (null == num) {
             num = 0;
@@ -289,13 +305,13 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
         ShoppingCartResultVo resultVo = new ShoppingCartResultVo();
         if (info == null) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         final String loginId = info.getLoginId();
         if (StringUtils.isBlank(loginId)) {
             resultVo.setSuccessFlag(false);
-            resultVo.setResultMsg("loginId为空");
+            resultVo.setResultMsg("userId为空");
             return resultVo;
         }
         if (rowIdBuyStatus == null) {
@@ -344,17 +360,10 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
             return null;
         }
         //合并临时购物车和数据库购物车
-        final String spMd5 = Md5Encrypt.md5(loginId + "@" + linkBuy);
-        List<ShoppingCart> carts = null;
-        if (ShoppingCartConstant.NOT_LINK_BUY == linkBuy) {
-            carts = selectList(new QueryWrapper<ShoppingCart>().eq("login_id", loginId)
-                    .eq("del_flag", 1)
-                    .orderByDesc("add_time"));
-        } else {
-            carts = selectList(new QueryWrapper<ShoppingCart>().eq("sp_md5", spMd5)
-                    .eq("del_flag", 1)
-                    .orderByDesc("add_time"));
-        }
+        List<ShoppingCart> carts = selectList(new QueryWrapper<ShoppingCart>()
+                .eq("login_id", loginId)
+                .eq("del_flag", 1)
+                .orderByDesc("add_time"));
         if (carts == null || carts.size() == 0) {
             return null;
         }
@@ -511,12 +520,12 @@ public class ShoppingcartServiceImpl extends ServiceImpl<ShoppingcartMapper, Sho
 
     @Override
     public void cleanCheckedShoppingcart(String loginId) {
-        Assert.hasText(loginId,"loginId为空");
+        Assert.hasText(loginId, "userId为空");
         ShoppingCart cart = new ShoppingCart();
         cart.setDelFlag(0);
         cart.setIsChecked(0);
         update(cart, new UpdateWrapper<ShoppingCart>().eq("login_id", loginId)
-                                    .eq("is_checked",1));
+                .eq("is_checked", 1));
 
     }
 }

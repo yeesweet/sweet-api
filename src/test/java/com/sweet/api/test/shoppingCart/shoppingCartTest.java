@@ -84,7 +84,7 @@ public class shoppingCartTest {
     }
     @Test
     public void clearShoppingCartTest(){
-        shoppingcartService.clearShoppingCart(getShoppingCartBaseInfo());
+        shoppingcartService.clearShoppingCart(getShoppingCartBaseInfo().getLoginId());
     }
     @Test
     public void updateBatchTest(){
