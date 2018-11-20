@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sweet.api.commons.PageFinder;
+import com.sweet.api.constants.enums.OrderStatus;
 import com.sweet.api.entity.Order;
 import com.sweet.api.entity.OrderDetail;
 import com.sweet.api.entity.vo.CommodityColumnVo;
@@ -67,7 +68,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 orderNo = redisCreateOrderNoUtils.getOrderNo(orderBaseVo.getOrderNoPrefix());
             }
             order.setOrderNo(orderNo);
-            order.setOrderStatus(1);
+            order.setOrderStatus(OrderStatus.UNPAID.getValue());
             order.setDeliveryStatus(1);
             order.setPayStatus(1);
             order.setCreateTime(new Date());

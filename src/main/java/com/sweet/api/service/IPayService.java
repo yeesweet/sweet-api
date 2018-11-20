@@ -11,5 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IPayService {
 
+    /**
+     * 订单支付
+     * @param payTradeInfo
+     * @return
+     */
     PayInfo payorder(PayTradeInfo payTradeInfo);
+
 }
