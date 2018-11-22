@@ -1,7 +1,7 @@
 package com.sweet.api.service;
 
+import com.sweet.api.entity.PayInfo;
 import com.sweet.api.entity.pay.PayTradeInfo;
-import com.sweet.api.entity.pay.PayInfo;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,4 +18,5 @@ public interface IPayService {
      */
     PayInfo payorder(PayTradeInfo payTradeInfo);
 
+    PayInfo gopay(String orderNo, String userId);
 }

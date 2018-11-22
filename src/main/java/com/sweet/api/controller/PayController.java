@@ -9,6 +9,7 @@ import com.sweet.api.service.IOrderService;
 import com.sweet.api.service.IPayReturnInfoService;
 import com.sweet.api.util.SignUtils;
 import com.sweet.api.util.WxPayUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,19 +112,19 @@ public class PayController {
      */
     public boolean verifyWeixinNotify(Map<String, String> map, String key){
         SortedMap<String, String> parameterMap = new TreeMap<>();
-        String sign = map.get("sign");
+        String returnSing = map.get("returnSing");
         for (Object keyValue : map.keySet()) {
-            if (!keyValue.toString().equals("sign")) {
+            if (!keyValue.toString().equals("returnSing")) {
                 parameterMap.put(keyValue.toString(), map.get(keyValue).toString());
             }
         }
-        String createSign = "";
+        String sourceSign = "";
         try {
-            createSign = SignUtils.sign(parameterMap,key);
+            sourceSign = SignUtils.sign(parameterMap,key);
         }catch (Exception e){
             logger.info("微信支付回调参数签名报错：{}",e.getMessage());
         }
-        if (createSign.equals(sign)) {
+        if (StringUtils.equals(returnSing,sourceSign)) {
             return true;
         } else {
             logger.error("微信支付回调参数验证签名失败。");

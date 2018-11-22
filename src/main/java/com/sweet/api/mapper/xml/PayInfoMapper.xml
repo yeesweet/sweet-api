@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sweet.api.mapper.PayInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.sweet.api.entity.PayInfo">
+        <id column="id" property="id" />
+        <result column="out_trade_no" property="outTradeNo" />
+        <result column="user_id" property="userId" />
+        <result column="prepay_id" property="prepayId" />
+        <result column="app_id" property="appId" />
+        <result column="nonce_str" property="nonceStr" />
+        <result column="expire_time" property="expireTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, out_trade_no, user_id, prepay_id, app_id, nonce_str, expire_time, create_time
+    </sql>
+
+</mapper>

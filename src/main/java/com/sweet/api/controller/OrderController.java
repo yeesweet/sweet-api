@@ -5,11 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.sweet.api.commons.PageFinder;
 import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.constants.ShoppingCartConstant;
-import com.sweet.api.entity.Order;
-import com.sweet.api.entity.OrderDetail;
-import com.sweet.api.entity.ShoppingCartBaseInfo;
-import com.sweet.api.entity.UserAddress;
-import com.sweet.api.entity.pay.PayInfo;
+import com.sweet.api.entity.*;
 import com.sweet.api.entity.pay.PayTradeInfo;
 import com.sweet.api.entity.req.SettlementParamReq;
 import com.sweet.api.entity.res.OrderDetailResp;
@@ -31,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -246,14 +241,47 @@ public class OrderController {
 
     /**
      * 去支付
+     *
      * @param orderNo
      * @param user
      * @return
      */
     @PostMapping("/gopay")
-    public Object gopay(String orderNo, SessionUserInfo user){
-        return null;
+    public Object gopay(String orderNo, SessionUserInfo user) {
+        if (null == user) {
+            return new ResponseMessage<>(1, "请您先登录");
+        }
+
+        final String userId = user.getUserId();
+        if (StringUtils.isBlank(userId)) {
+            return new ResponseMessage<>(1, "请您先登录");
+        }
+
+        if (StringUtils.isBlank(orderNo)) {
+            return new ResponseMessage<>(1, "订单号为空");
+        }
+        try {
+            //订单校验
+            final Order order = orderService.getOrder(userId, orderNo);
+            if (null == order) {
+                return new ResponseMessage<>(1, "订单号不存在");
+            }
+            final Integer payStatus = order.getPayStatus();
+            if (payStatus != 1) {
+                return new ResponseMessage<>(1, "订单不是未支付状态");
+            }
+            PayInfo payInfo = payService.gopay(orderNo, userId);
+            if (payInfo != null) {
+                return new ResponseMessage<>(0, "success", payInfo);
+            } else {
+                return new ResponseMessage<>(1, "支付失败，请稍后重试");
+            }
+        } catch (Exception e) {
+            logger.error(orderNo + "支付失败：", e);
+            return new ResponseMessage<>(1, "支付失败，请稍后重试");
+        }
     }
+
     private OrderListResp transformParam(PageFinder<Order> orders) {
         OrderListResp resp = new OrderListResp();
         resp.setCount(orders.getRowCount());
