@@ -5,9 +5,7 @@ import com.sweet.api.commons.ResponseMessage;
 import com.sweet.api.entity.SystemArea;
 import com.sweet.api.entity.UserAddress;
 import com.sweet.api.entity.req.UserAddressReq;
-import com.sweet.api.entity.res.SessionUserInfo;
-import com.sweet.api.entity.res.SystemAreaResp;
-import com.sweet.api.entity.res.UserAddressResp;
+import com.sweet.api.entity.res.*;
 import com.sweet.api.service.ISystemAreaService;
 import com.sweet.api.service.IUserAddressService;
 import com.sweet.api.util.StringUtil;
@@ -22,8 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -270,5 +267,38 @@ public class UserAddressController {
 		userAddress.setDefaultAddress(1);
 		userAddressService.updateById(userAddress);
 		return new ResponseMessage();
+	}
+
+	/**
+	 * 生成地址json串
+	 * @return
+	 */
+	@RequestMapping("/toBuildJsonAddress")
+	public List<SystemAreaProvinceResp> toBuildJsonAddress() {
+		Map<String,Object> map = new HashMap<>();
+		List<SystemAreaProvinceResp> provinceRespList = new LinkedList<>();
+		List<SystemAreaResp> addressRespList = setArea("root",1);
+		if(addressRespList != null && addressRespList.size()>0){
+			for(int i=0;i<addressRespList.size();i++){
+				SystemAreaResp systemAreaResp = addressRespList.get(i);
+				SystemAreaProvinceResp systemAreaProvinceResp = new SystemAreaProvinceResp();
+				BeanUtils.copyProperties(systemAreaResp,systemAreaProvinceResp);
+				List<SystemAreaCityResp> cityRespList = new LinkedList<>();
+				List<SystemAreaResp> cityAddressRespList = setArea(systemAreaResp.getNo(),2);
+				if(cityAddressRespList != null && cityAddressRespList.size()>0) {
+					for (int j = 0; j < cityAddressRespList.size(); j++) {
+						SystemAreaResp citySystemAreaResp = cityAddressRespList.get(j);
+						SystemAreaCityResp systemAreaCityResp = new SystemAreaCityResp();
+						BeanUtils.copyProperties(citySystemAreaResp, systemAreaCityResp);
+						List<SystemAreaResp> areas = setArea(citySystemAreaResp.getNo(),3);
+						systemAreaCityResp.setAreas(areas);
+						cityRespList.add(systemAreaCityResp);
+					}
+				}
+				systemAreaProvinceResp.setCities(cityRespList);
+				provinceRespList.add(systemAreaProvinceResp);
+			}
+		}
+		return provinceRespList;
 	}
 }
