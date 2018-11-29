@@ -32,82 +32,82 @@ import java.util.List;
 
 @Configuration
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
-  private static final Logger logger = LoggerFactory.getLogger(MvcConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(MvcConfiguration.class);
 
-  @Autowired
-  private AccessLogInterceptor accessLogInterceptor;
+    @Autowired
+    private AccessLogInterceptor accessLogInterceptor;
 
-  @Autowired
-  private WechatAccessInterceptor wechatAccessInterceptor;
+    @Autowired
+    private WechatAccessInterceptor wechatAccessInterceptor;
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
 
 //    preHandle execute seq:from top to bottom,postHandle from bottom to top.
-    registry.addInterceptor(accessLogInterceptor).addPathPatterns("/**");
-    registry.addInterceptor(wechatAccessInterceptor).addPathPatterns("/**");
-    super.addInterceptors(registry);
-  }
+        registry.addInterceptor(accessLogInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(wechatAccessInterceptor).addPathPatterns("/**");
+        super.addInterceptors(registry);
+    }
 
-  @Override
-  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 
-    HandlerMethodArgumentResolver argumentResolver = new HandlerMethodArgumentResolver() {
-      @Override
-      public boolean supportsParameter(MethodParameter parameter) {
-        if (parameter.getParameterType().isAssignableFrom(SessionUserInfo.class)) {
-          return true;
-        } else {
-          return false;
-        }
-      }
+        HandlerMethodArgumentResolver argumentResolver = new HandlerMethodArgumentResolver() {
+            @Override
+            public boolean supportsParameter(MethodParameter parameter) {
+                if (parameter.getParameterType().isAssignableFrom(SessionUserInfo.class)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
 
-      @Override
-      public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Object info = webRequest.getAttribute(ServletConst.ATTR_USER_INFO, NativeWebRequest.SCOPE_REQUEST);
-        return info;
-      }
-    };
+            @Override
+            public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+                Object info = webRequest.getAttribute(ServletConst.ATTR_USER_INFO, NativeWebRequest.SCOPE_REQUEST);
+                return info;
+            }
+        };
 
-    argumentResolvers.add(argumentResolver);
-  }
+        argumentResolvers.add(argumentResolver);
+    }
 
-  @Override
-  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 
-    FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
 
-    FastJsonConfig fastJsonConfig = new FastJsonConfig();
-    SerializeConfig config = new SerializeConfig();
-    config.propertyNamingStrategy = PropertyNamingStrategy.CamelCase;
-    fastJsonConfig.setSerializeConfig(config);
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        SerializeConfig config = new SerializeConfig();
+        config.propertyNamingStrategy = PropertyNamingStrategy.CamelCase;
+        fastJsonConfig.setSerializeConfig(config);
 
-    ParserConfig parserConfig = new ParserConfig();
-    parserConfig.propertyNamingStrategy = PropertyNamingStrategy.CamelCase;
-    fastJsonConfig.setParserConfig(parserConfig);
-    fastConverter.setSupportedMediaTypes(new ArrayList<MediaType>() {{
-      add(MediaType.APPLICATION_JSON_UTF8);
-    }});
-    // 不忽略对象属性中的null值
-    fastJsonConfig.setSerializerFeatures(
-            SerializerFeature.PrettyFormat,
-            SerializerFeature.WriteMapNullValue
-    );
-    fastConverter.setFastJsonConfig(fastJsonConfig);
-    converters.add(fastConverter);
-    StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter();
-    stringHttpMessageConverter.setSupportedMediaTypes(new ArrayList<MediaType>() {{
-      add(MediaType.TEXT_HTML);
-      add(MediaType.TEXT_PLAIN);
-    }});
-    stringHttpMessageConverter.setDefaultCharset(Charset.forName("utf8"));
-    converters.add(stringHttpMessageConverter);
+        ParserConfig parserConfig = new ParserConfig();
+        parserConfig.propertyNamingStrategy = PropertyNamingStrategy.CamelCase;
+        fastJsonConfig.setParserConfig(parserConfig);
+        fastConverter.setSupportedMediaTypes(new ArrayList<MediaType>() {{
+            add(MediaType.APPLICATION_JSON_UTF8);
+        }});
+        // 不忽略对象属性中的null值
+        fastJsonConfig.setSerializerFeatures(
+                SerializerFeature.PrettyFormat,
+                SerializerFeature.WriteMapNullValue
+        );
+        fastConverter.setFastJsonConfig(fastJsonConfig);
+        converters.add(fastConverter);
+        StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter();
+        stringHttpMessageConverter.setSupportedMediaTypes(new ArrayList<MediaType>() {{
+            add(MediaType.TEXT_HTML);
+            add(MediaType.TEXT_PLAIN);
+        }});
+        stringHttpMessageConverter.setDefaultCharset(Charset.forName("utf8"));
+        converters.add(stringHttpMessageConverter);
 
-    ByteArrayHttpMessageConverter bahmc = new ByteArrayHttpMessageConverter();
-    bahmc.setSupportedMediaTypes(new ArrayList<MediaType>() {{
-      add(MediaType.APPLICATION_OCTET_STREAM);
-    }});
+        ByteArrayHttpMessageConverter bahmc = new ByteArrayHttpMessageConverter();
+        bahmc.setSupportedMediaTypes(new ArrayList<MediaType>() {{
+            add(MediaType.APPLICATION_OCTET_STREAM);
+        }});
 
-  }
+    }
 
 }
