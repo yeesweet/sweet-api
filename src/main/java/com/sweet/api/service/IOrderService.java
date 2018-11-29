@@ -35,6 +35,7 @@ public interface IOrderService extends IService<Order> {
 
     /**
      * 查询订单详情
+     *
      * @param userId
      * @param orderNo
      * @return
@@ -43,6 +44,7 @@ public interface IOrderService extends IService<Order> {
 
     /**
      * 查询订单信息 不包含详情、收货人
+     *
      * @param userId
      * @param orderNo
      * @return
@@ -51,14 +53,17 @@ public interface IOrderService extends IService<Order> {
 
     /**
      * 取消订单  同时释放库存
+     *
      * @param userId
      * @param order
+     * @param reason
      * @return
      */
-    boolean cancelOrder(String userId, String orderNo);
+    boolean cancelOrder(String userId, String orderNo, String reason);
 
     /**
      * 确认收货
+     *
      * @param userId
      * @param orderNo
      * @return

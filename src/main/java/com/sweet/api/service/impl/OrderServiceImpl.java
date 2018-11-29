@@ -146,25 +146,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean cancelOrder(String userId, String orderNo) {
+    public boolean cancelOrder(String userId, String orderNo, String reason) {
         Assert.hasText(userId, "userId为空");
         Assert.hasText(orderNo, "orderNo为空");
         try {
             Order order = getOrderDetail(userId, orderNo);
             if (order != null) {
                 final List<OrderDetail> details = order.getOrderDetails();
-                Map<String,Integer> stockMap = new HashMap<>();
-                for(OrderDetail detail : details){
-                    stockMap.put(detail.getCommodityNo(),detail.getProductTotalNum());
+                Map<String, Integer> stockMap = new HashMap<>();
+                for (OrderDetail detail : details) {
+                    stockMap.put(detail.getCommodityNo(), detail.getProductTotalNum());
                 }
                 //更新订单状态、释放库存
                 order.setOrderStatus(3);
+                if (StringUtils.isNotBlank(reason)) {
+                    order.setRefundReason(reason);
+                }
                 updateById(order);
                 iInventoryService.decreaseStockBatch(stockMap);
                 return true;
             }
         } catch (Exception e) {
-            logger.error(orderNo+"订单取消失败",e);
+            logger.error(orderNo + "订单取消失败", e);
         }
         return false;
     }
@@ -182,7 +185,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 return true;
             }
         } catch (Exception e) {
-            logger.error(orderNo+"订单取消失败",e);
+            logger.error(orderNo + "订单取消失败", e);
         }
         return false;
     }

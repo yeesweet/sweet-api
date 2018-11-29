@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,7 +179,7 @@ public class OrderController {
     }
 
     @PostMapping("/cancel")
-    public Object cancelOrder(String orderNo, SessionUserInfo user) {
+    public Object cancelOrder(String orderNo, String reason, SessionUserInfo user) {
         if (null == user) {
             return new ResponseMessage<>(1, "请您先登录");
         }
@@ -196,7 +197,7 @@ public class OrderController {
             if (order == null) {
                 return new ResponseMessage<>(1, orderNo + "订单号为空");
             }
-            boolean success = orderService.cancelOrder(userId, orderNo);
+            boolean success = orderService.cancelOrder(userId, orderNo, reason);
             if (success) {
                 return new ResponseMessage<>(1, "订单取消成功");
             } else {
