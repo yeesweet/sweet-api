@@ -18,22 +18,23 @@ import java.io.IOException;
 @Slf4j
 public class LoginController {
 
-  @Autowired
-  private ILoginService loginService;
+    @Autowired
+    private ILoginService loginService;
 
-  /**
-   * 登录
-   * @param loginReq
-   * @return
-   * @throws IOException
-   */
-  @PostMapping(value="login")
-  public ResponseMessage login(@RequestBody LoginReq loginReq) throws IOException {
-    LoginResp loginResp = loginService.login(loginReq.getCode());
-    if(loginResp == null){
-      return new ResponseMessage(-1,"登录异常");
+    /**
+     * 登录
+     *
+     * @param loginReq
+     * @return
+     * @throws IOException
+     */
+    @PostMapping(value = "login")
+    public ResponseMessage login(@RequestBody LoginReq loginReq) throws IOException {
+        LoginResp loginResp = loginService.login(loginReq.getCode());
+        if (loginResp == null) {
+            return new ResponseMessage(-1, "登录异常");
+        }
+        return new ResponseMessage(loginResp);
     }
-    return new ResponseMessage(loginResp);
-  }
 
 }

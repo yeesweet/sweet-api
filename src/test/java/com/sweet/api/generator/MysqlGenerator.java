@@ -68,6 +68,7 @@ public class MysqlGenerator {
 		strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
 		strategy.setInclude(new String[] { "tbl_order","tbl_order_detail"}); // 需要生成的表
 		strategy.setEntityLombokModel(true);
+		strategy.setRestControllerStyle(true);
 		// strategy.setExclude(new String[]{"test"}); // 排除生成的表
 		// 自定义实体父类
 		//strategy.setSuperEntityClass("com.sweet.api.commons.SuperEntity");
